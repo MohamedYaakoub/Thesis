@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/GSP_python.iml" filepath="$PROJECT_DIR$/.idea/GSP_python.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Parallel GSP/.idea/Parallel GSP.iml" filepath="$PROJECT_DIR$/../Parallel GSP/.idea/Parallel GSP.iml" />
+    </modules>
+  </component>
+</project>
