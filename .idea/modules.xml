@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../Shivan - Thesis/2-GSP_models/.idea/2-GSP_models.iml" filepath="$PROJECT_DIR$/../../Shivan - Thesis/2-GSP_models/.idea/2-GSP_models.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/GSP_python.iml" filepath="$PROJECT_DIR$/.idea/GSP_python.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Parallel GSP/.idea/Parallel GSP.iml" filepath="$PROJECT_DIR$/../Parallel GSP/.idea/Parallel GSP.iml" />
     </modules>

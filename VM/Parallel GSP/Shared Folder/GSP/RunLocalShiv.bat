@@ -1,1 +1,0 @@
-C:\Users\Shivan\anaconda3\envs\py39_32\python.exe  "C:\Users\Shivan\OneDrive - Delft University of Technology\Desktop\Docs\VM\Parallel GSP\Shared Folder\GSP\Client.py" 0
