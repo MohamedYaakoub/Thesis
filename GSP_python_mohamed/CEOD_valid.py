@@ -64,17 +64,20 @@ def run_validation():
     paramE = output_list[:6]
 
     All_Reynolds = []
+    All_change = []
     for i, j, k in zip(GEnx_OD, GEnx_OD_true, N1cCEOD):
         print('Loop initiated')
 
         inputDat = i
         trueVal = j
         N1cCEODi = k
+        print(inputDat.shape)
         mean, change, Eta, Reynolds = compute_error(inputDat, trueVal)
         meanL.append(list(mean))
         stdL.append(list(np.std(change, axis=0)))
         EtaL.append(list(Eta * 100))
         All_Reynolds.append(Reynolds)
+        All_change.append(change/100)
         stdLRi = []
         # for parameterE in change.T:
         #     coef = np.polyfit(inputDat[:, 0], parameterE, 1)
@@ -107,7 +110,12 @@ def run_validation():
         #
         # plt.legend()
         # plt.show()
-    pickle.dump([GEnx_OD, All_Reynolds], open("Constants/Reynolds_set_Valid.p", "wb"))
+    # pickle.dump([GEnx_OD, All_Reynolds], open("Constants/Reynolds_set_Valid.p", "wb"))
+    barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]")
+    # barC(EtaL, ['Take-off', 'Climb', 'Cruise'], Etas, "Efficiency [%]")
+    All_change = [item for sublist in All_change for item in sublist]
+    Rms = np.sqrt(np.mean(np.mean(np.array(All_change) ** 2, axis=0)))
+    print(Rms, "rms")
 
     print("Part 1 done")
 
@@ -145,19 +153,17 @@ def barC(outputval, selected_k, params_out, y_name):
     plt.margins(y=0.1)
     plt.show()
 
-
 # for i in range(len(inputs_list[1:])):
 #     plt.scatter(GEnx_OD[2][:, 0], GEnx_OD[2][:, i+1])
 #     plt.xlabel('Corrected Fan Speed [%]')
 #     plt.ylabel(str(inputs_list[i+1]))
 #     plt.show()
 
+
 if __name__ == '__main__':
     run_validation()
     # cleanup(gspdll)
-    pass
-# barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]")
-# barC(EtaL, ['Take-off', 'Climb', 'Cruise'], Etas, "Efficiency [%]")
+
 
 # %%
 

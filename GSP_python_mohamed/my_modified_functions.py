@@ -9,7 +9,8 @@ from _ctypes import FreeLibrary
 
 curr_doler_path = os.getcwd()
 def loadModel(Engine, name):
-    print("Loading API and model . . .", end='\r')
+    # print("Loading API and model . . .", end='\r')
+    print("Loading API and model . . .")
     gspdll = ctypes.cdll.LoadLibrary(curr_doler_path +"\GSP.dll")  # load DLL for API
     if Engine == 0:
         # gspdll.LoadModel("CF6-80C2/" + name, 0)  # load the GSP model

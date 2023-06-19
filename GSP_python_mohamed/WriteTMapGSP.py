@@ -12,12 +12,12 @@ import subprocess
 # read data
 def read_mapT(fileOld, fileNew, map):
     # path  maps for the reference (old) map
-    path = "C:/Users/mohsy/University/KLM/Thesis/My thesis/Parallel GSP/Shared " \
-           "Folder/GSP/"
-    foldername    = "Model-0"
-    foldernameRef = "maps_ref"
-    path_fileRef  = path + foldername + "/" + foldernameRef + "/" + fileOld + ".map"
-    path_fileNew  = path + foldername + "/" + fileNew + ".map"
+    # path = "C:/Users/mohsy/University/KLM/Thesis/My thesis/Parallel GSP/Shared " \
+    #        "Folder/GSP/"
+    # foldername    = "Model-0"
+    # foldernameRef = "maps_ref"
+    path_fileRef = "GEnx Maps Shivan/" + fileOld + ".map"
+    path_fileNew = "Solver maps/" + fileNew + ".map"
 
     path_file = path_fileRef if map == 0 else path_fileNew
 
@@ -79,16 +79,16 @@ def read_mapT(fileOld, fileNew, map):
 # write data
 def write_mapT(fileOld, fileNew, PRmin, PRmax, Mdot, Eta, N, B):
     # path  maps for the reference (old) and New (gsp) map
-    path = "C:/Users/mohsy/University/KLM/Thesis/My thesis/Parallel GSP/Shared " \
-           "Folder/GSP/"
-    foldername    = "Model-0"
-    foldernameRef = "maps_ref"
+    # path = "C:/Users/mohsy/University/KLM/Thesis/My thesis/Parallel GSP/Shared " \
+    #        "Folder/GSP/"
+    # foldername    = "Model-0"
+    # foldernameRef = "maps_ref"
 
-    path_fileOld  = path + foldername + "/" + foldernameRef + "/" + fileOld + ".map"
-    path_fileNew  = path + foldername + "/" + fileNew + ".map"
+    path_fileRef = "GEnx Maps Shivan/" + fileOld + ".map"
+    path_fileNew = "Solver maps/" + fileNew + ".map"
 
     # extract the header and beta line data
-    with open(path_fileOld, 'r') as f:
+    with open(path_fileRef, 'r') as f:
         linesO = f.readlines()
         for index, line in enumerate(linesO):
             if line.split()[0] == "Min":

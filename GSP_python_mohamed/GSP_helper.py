@@ -17,7 +17,26 @@ def runGsp(gspdll, inputs, outputs):
         inputs = [inputs]
     Results = [0] * len(inputs)
     # settings model, these input parameters should be specified in the GSP API
-    for ID, inp in enumerate(inputs):
+    if inputs.ndim > 1:
+        for ID, inp in enumerate(inputs):
+            for i in range(0, len(inp)):
+                gspdll.SetInputControlParameterByIndex(i + 1, ctypes.c_double(inp[i]))
+            # the RunModel function used below has four inputs:
+            # - Boolean input parameter to show (true) or hide (false) the start time dialog
+            # - Boolean input parameter to show (true) or hide (false) the stabilise dialog
+            # - Boolean input parameter to stabilise the simulation (true) at the current time. I.e. a
+            # steady state calculation for the current input conditions will be calculated.
+            # - Boolean input parameter to show (true) or hide (false) the progress bar window.
+            gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+            # this is the output from the model, as specified in GSP API (the same order)
+            output_set = []  # collect all the specified outputs in this list
+            for j in range(1, len(outputs)+1):
+                dv = ctypes.c_double(0.)
+                gspdll.GetOutputDataParameterValueByIndex(j, ctypes.byref(dv), 0)
+                output_set.append(dv.value)
+            Results[ID] = output_set
+    else:
+        inp = inputs
         for i in range(0, len(inp)):
             gspdll.SetInputControlParameterByIndex(i + 1, ctypes.c_double(inp[i]))
         # the RunModel function used below has four inputs:
@@ -29,11 +48,11 @@ def runGsp(gspdll, inputs, outputs):
         gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
         # this is the output from the model, as specified in GSP API (the same order)
         output_set = []  # collect all the specified outputs in this list
-        for j in range(1, len(outputs)+1):
+        for j in range(1, len(outputs) + 1):
             dv = ctypes.c_double(0.)
             gspdll.GetOutputDataParameterValueByIndex(j, ctypes.byref(dv), 0)
             output_set.append(dv.value)
-        Results[ID] = output_set
+        Results = output_set
 
     return np.array(Results)
 
