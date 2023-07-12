@@ -12,7 +12,7 @@ from WriteTMapGSP import read_mapT, write_mapT
 Engine = 1  # Enter zero for the CF6 and 1 for the GEnx
 GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
 #
-# GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_input.p", "rb"))
+# GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_set_Valid.p", "rb"))
 
 # _, All_Reynolds = pickle.load(open("Constants/Reynolds_set_Valid.p", "rb"))
 #
@@ -21,9 +21,9 @@ GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
 # GEnx_OD_true = np.array([item for sublist in GEnx_OD_true for item in sublist])
 
 GEnx_OD, GEnx_OD_true, All_Reynolds = pickle.load(open("Constants/Reynolds_input_clusters.p", "rb"))
-GEnx_OD = GEnx_OD.astype(np.float32)
-GEnx_OD_true = GEnx_OD_true.astype(np.float32)
-All_Reynolds= All_Reynolds.astype(np.float32)
+GEnx_OD = GEnx_OD.astype(np.float32)[10:, :]
+GEnx_OD_true = GEnx_OD_true.astype(np.float32)[10:, :]
+All_Reynolds = All_Reynolds.astype(np.float32)[10:, :]
 
 inputs_list = ["N1", "P0", "T0", "Mach", "HP"]
 output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2", "Re2", "Re25", "Re3", "Re4", "Re49", "Re5", "Re14", "Re19"]

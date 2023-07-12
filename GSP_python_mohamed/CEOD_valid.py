@@ -10,17 +10,21 @@ import timeit
 import sys
 from GSP_helper import cleanup, runGsp
 import subprocess
+from map_functions import reset_maps
 
 # sys.path.insert(1, "C:/Users/mohsy/University/KLM/Thesis/My thesis/Code/GSP_python_mohamed/GSP_files/")
 
 from matplotlib import pyplot as plt
 
-GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_input.p", "rb"))  # deal with large data set (memory problem
+# GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_set_Valid.p", "rb"))  # deal with large data set (memory problem
+# file_name = "CEOD_set_Valid.P"
+# file_name = "CEOD_200408-203904-KLM168____-KATLEHAM-KL_PH-BHA-2-956609-W010FFD.p"
+file_name = "CEOD_160724-193429-KLM891____-EHAMZUUU-KL_PH-BHA-2-956609-W007FFD.p"
 
+GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
 # %%
 Engine = 1  # Enter zero for the CF6 and 1 for the GEnx
 GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
-# GSPfileName = "OffDesignGEnx.mxl"
 
 
 # note Valid is the latest model-6
@@ -37,7 +41,7 @@ output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2", "Re2", "Re25", "Re3", "
 pickle.dump([inputs_list, output_list, GSPfileName, Engine], open("io.p", "wb"))
 # import the objective function
 
-
+reset_maps()
 # from OD_function import gspdll
 from my_modified_functions import gspdll
 
@@ -110,11 +114,12 @@ def run_validation():
         #
         # plt.legend()
         # plt.show()
-    # pickle.dump([GEnx_OD, All_Reynolds], open("Constants/Reynolds_set_Valid.p", "wb"))
-    barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]")
+
     # barC(EtaL, ['Take-off', 'Climb', 'Cruise'], Etas, "Efficiency [%]")
     All_change = [item for sublist in All_change for item in sublist]
     Rms = np.sqrt(np.mean(np.mean(np.array(All_change) ** 2, axis=0)))
+    barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]",
+         f'{file_name.strip("CEOD_").strip(".p")} \n \n RMSE: {str(round(Rms, 6))}')
     print(Rms, "rms")
 
     print("Part 1 done")
@@ -122,7 +127,7 @@ def run_validation():
 
 # %%
 # from OD_sens import barC
-def barC(outputval, selected_k, params_out, y_name):
+def barC(outputval, selected_k, params_out, y_name, title):
     plt.rcParams['figure.dpi'] = 500
     outp_length = len(outputval[0]) if isinstance(outputval[0], list) else len(outputval)
     len_k = len(selected_k) if len(selected_k) == 3 else 1
@@ -149,7 +154,9 @@ def barC(outputval, selected_k, params_out, y_name):
     plt.xticks(r + width * len_k / 2.6, params_out)  # was 2.6
     plt.yticks(np.arange(9))
     plt.legend(loc='upper right')  # lower
+    plt.title(title)
     fig.tight_layout()
+
     plt.margins(y=0.1)
     plt.show()
 

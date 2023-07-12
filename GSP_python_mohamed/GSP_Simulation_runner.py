@@ -10,7 +10,7 @@ from WriteTMapGSP import read_mapT, write_mapT
 Engine = 1  # Enter zero for the CF6 and 1 for the GEnx
 GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
 
-GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_input.p", "rb"))
+GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/CEOD_set_Valid.p", "rb"))
 
 # print(GEnx_OD[1].shape)  # inputDat #this is used for y_sim
 # print(GEnx_OD_true[2].shape)  # TrueVal of CEOD ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2"]
