@@ -127,9 +127,11 @@ def clustering(save=False):
                                       clusters_climb_array[:, 5:],
                                       clusters_cruise_array[:, 5:]))
 
+    print(Genx_input_array.shape)
+
     if save:
-        pickle.dump([Genx_input_array, Genx_true_array], open("Constants/CEOD_input_clusters_no_Reynolds.p", "wb"))
+        pickle.dump([Genx_input_array, Genx_true_array], open("Clusters/CEOD_input_clusters2_no_Reynolds.p", "wb"))
 
 
 if __name__ == '__main__':
-    clustering(save=True)
+    clustering()

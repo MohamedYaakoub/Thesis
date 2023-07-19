@@ -3,25 +3,49 @@ import pandas as pd
 import os
 import pickle
 from matplotlib import pyplot as plt
+import csv
 from helper_variables import ToExtractParams
 
-print(f'There are currently {len(os.listdir("CEOD_GEnx/csv files"))} csv files in the CEOD_GEnx/csv files directory')
-N2_boxplot = []
-P0_boxplot = []
-T0_boxplot = []
-Ma_boxplot = []
-HP_boxplot = []
-alt_list = []
-time_list = []
+directory = "CEOD_GEnx/csv files"
+# directory = "C:/Users/mohsy/University/KLM/Air France KLM/ES Data Team - 2019 Feb"
+print(f'There are currently {len(os.listdir(directory))} csv files in the CEOD_GEnx/csv files directory')
+
+N2_boxplot_take_off = []
+P0_boxplot_take_off = []
+T0_boxplot_take_off = []
+Ma_boxplot_take_off = []
+HP_boxplot_take_off = []
+alt_list_take_off = []
+time_list_take_off = []
+
+N2_boxplot_climb = []
+P0_boxplot_climb = []
+T0_boxplot_climb = []
+Ma_boxplot_climb = []
+HP_boxplot_climb = []
+alt_list_climb = []
+time_list_climb = []
+
+N2_boxplot_cruise = []
+P0_boxplot_cruise = []
+T0_boxplot_cruise = []
+Ma_boxplot_cruise = []
+HP_boxplot_cruise = []
+alt_list_cruise = []
+time_list_cruise = []
+
 
 counter = 0
-for file in os.listdir("CEOD_GEnx/csv files"):
-    counter += 1
-    print(counter)
+for file in os.listdir(directory)[19:20]:
+    print(file)
+
     # file = '200408-203904-KLM168____-KATLEHAM-KL_PH-BHA-2-956609-W010FFD.csv'
     # file = '160801-040522-KLM884____-ZSAMEHAM-KL_PH-BHA-2-956609-W007FFD.csv'
-    data = pd.read_csv("CEOD_GEnx/csv files/" + file, skiprows=1, index_col=False, header=0, dtype=np.float32,
+    data = pd.read_csv(directory + "/" + file, skiprows=1, index_col=False, header=0, dtype=np.float32,
                        usecols=ToExtractParams)
+
+    # data = pd.read_pickle(directory + "/" + file)
+
     data["Header: Start Date"][:] = data['Header: Start Date'][0]
     dataCL = data[(data["UVL_FLIGHTPHS"] == 5) | (data["UVL_FLIGHTPHS"] == 6)]
     #     dataCL = dataCL.tail(50)
@@ -95,7 +119,7 @@ for file in os.listdir("CEOD_GEnx/csv files"):
 
     dataCR2 = dataCR.loc[dataCR.index[ind_drop]]
 
-    GEnx_ODL, GEnx_OD_trueL, N1cCEODL, N1CEODL = [], [], [], []
+    GEnx_ODL, GEnx_OD_trueL, N1cCEODL, N1CEODL, time_alt = [], [], [], [], []
 
     for i, dataI in enumerate([dataTO, dataCL, dataCR2]):  #
 
@@ -146,26 +170,49 @@ for file in os.listdir("CEOD_GEnx/csv files"):
                              data["Total Engine Horsepower Extraction (HP)"] * 0.745699872)).T
                             # data["Altitude based on P0 (FT)"],
                             #  data["Offset"])).T
+        extra_var = np.vstack((data["Altitude based on P0 (FT)"], data["Offset"])).T
 
         GEnx_OD = GEnx_OD[GEnx_OD[:, 0].argsort()]
         GEnx_OD = np.flip(GEnx_OD, axis=0)
+
+        extra_var = extra_var[extra_var[:, 0].argsort()]
+        extra_var = np.flip(extra_var, axis=0)
+
         Cv = np.full((GEnx_OD.shape[0], 1), 0.98) if i == 0 else np.full((GEnx_OD.shape[0], 1), 1)
         # GEnx_OD = np.hstack((GEnx_OD, Cv))
         GEnx_ODL.append(GEnx_OD)
         GEnx_OD_trueL.append(GEnx_OD_true)
         N1cCEODL.append(N1cCEOD)
         N1CEODL.append(N1CEOD)
+        time_alt.append(extra_var)
 
-    pickle.dump([GEnx_ODL, GEnx_OD_trueL, N1cCEODL], open("CEOD_GEnx/CEOD_" + file.strip(".csv") + ".p", "wb"))
-    # flight_phase = 1
-    # N2_boxplot.append(GEnx_ODL[flight_phase][:, 0])
-    # P0_boxplot.append(GEnx_ODL[flight_phase][:, 1])
-    # T0_boxplot.append(GEnx_ODL[flight_phase][:, 2])
-    # Ma_boxplot.append(GEnx_ODL[flight_phase][:, 3])
-    # HP_boxplot.append(GEnx_ODL[flight_phase][:, 4])
-    # alt_list.append(GEnx_ODL[flight_phase][:, 5])
-    # time_list.append(GEnx_ODL[flight_phase][:, 6])
-    # print(GEnx_ODL[flight_phase][:, 0].shape)
+    pickle.dump([GEnx_ODL, GEnx_OD_trueL, N1cCEODL, time_alt], open("CEOD_GEnx/CEOD_" + file.strip(".csv") + ".p", "wb"))
+    flight_phase = 0
+    N2_boxplot_take_off.append(GEnx_ODL[flight_phase][:, 0])
+    P0_boxplot_take_off.append(GEnx_ODL[flight_phase][:, 1])
+    T0_boxplot_take_off.append(GEnx_ODL[flight_phase][:, 2])
+    Ma_boxplot_take_off.append(GEnx_ODL[flight_phase][:, 3])
+    HP_boxplot_take_off.append(GEnx_ODL[flight_phase][:, 4])
+    # alt_list_take_off.append(GEnx_ODL[flight_phase][:, 5])
+    # time_list_take_off.append(GEnx_ODL[flight_phase][:, 6])
+
+    flight_phase = 1
+    N2_boxplot_climb.append(GEnx_ODL[flight_phase][:, 0])
+    P0_boxplot_climb.append(GEnx_ODL[flight_phase][:, 1])
+    T0_boxplot_climb.append(GEnx_ODL[flight_phase][:, 2])
+    Ma_boxplot_climb.append(GEnx_ODL[flight_phase][:, 3])
+    HP_boxplot_climb.append(GEnx_ODL[flight_phase][:, 4])
+    # alt_list_climb.append(GEnx_ODL[flight_phase][:, 5])
+    # time_list_climb.append(GEnx_ODL[flight_phase][:, 6])
+
+    flight_phase = 2
+    N2_boxplot_cruise.append(GEnx_ODL[flight_phase][:, 0])
+    P0_boxplot_cruise.append(GEnx_ODL[flight_phase][:, 1])
+    T0_boxplot_cruise.append(GEnx_ODL[flight_phase][:, 2])
+    Ma_boxplot_cruise.append(GEnx_ODL[flight_phase][:, 3])
+    HP_boxplot_cruise.append(GEnx_ODL[flight_phase][:, 4])
+    # alt_list_cruise.append(GEnx_ODL[flight_phase][:, 5])
+    # time_list_cruise.append(GEnx_ODL[flight_phase][:, 6])
 
 
 def filter_outliers(data_array):
@@ -222,9 +269,26 @@ def filter_outliers(data_array):
 # plt.show()
 #
 #
-# for i in range(len(T0_boxplot)):
-#     plt.scatter(time_list[i], alt_list[i])
+
+# for i in range(len(T0_boxplot_take_off)):
+#     plt.scatter(time_list_take_off[i], alt_list_take_off[i], label=str(i))
 # plt.ylabel("alt")
 # plt.xlabel("offset")
 # plt.legend()
 # plt.show()
+#
+# for i in range(len(T0_boxplot_take_off)):
+#     plt.scatter(time_list_climb[i], alt_list_climb[i], label=str(i))
+# plt.ylabel("alt")
+# plt.xlabel("offset")
+# plt.legend()
+# plt.show()
+#
+#
+# for i in range(len(T0_boxplot_take_off)):
+#     plt.scatter(time_list_cruise[i], alt_list_cruise[i], label=str(i))
+# plt.ylabel("alt")
+# plt.xlabel("offset")
+# plt.legend()
+# plt.show()
+

@@ -20,10 +20,17 @@ GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
 # GEnx_OD = np.array([item for sublist in GEnx_OD for item in sublist])
 # GEnx_OD_true = np.array([item for sublist in GEnx_OD_true for item in sublist])
 
-GEnx_OD, GEnx_OD_true, All_Reynolds = pickle.load(open("Constants/Reynolds_input_clusters.p", "rb"))
-GEnx_OD = GEnx_OD.astype(np.float32)[10:, :]
-GEnx_OD_true = GEnx_OD_true.astype(np.float32)[10:, :]
-All_Reynolds = All_Reynolds.astype(np.float32)[10:, :]
+GEnx_OD, GEnx_OD_true, All_Reynolds = pickle.load(open("Clusters/Reynolds_one_flight_sampled.p", "rb"))
+
+Re25_DP = All_Reynolds[0, 1]
+Re3_DP = All_Reynolds[0, 2]
+Re49_DP = All_Reynolds[0, 4]
+Re5_DP = All_Reynolds[0, 5]
+Re19_DP = All_Reynolds[0, 7]
+
+GEnx_OD = GEnx_OD.astype(np.float32)[8:, :]
+GEnx_OD_true = GEnx_OD_true.astype(np.float32)[8:, :]
+All_Reynolds = All_Reynolds.astype(np.float32)[8:, :]
 
 inputs_list = ["N1", "P0", "T0", "Mach", "HP"]
 output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2", "Re2", "Re25", "Re3", "Re4", "Re49", "Re5", "Re14", "Re19"]
@@ -39,8 +46,6 @@ pickle.dump([inputs_list, output_list, GSPfileName, Engine], open("io.p", "wb"))
 #         plt.ylabel('Re')
 #         plt.legend()
 #     plt.show()
-
-
 
 
 Re2, Re25, Re3, Re4, Re49, Re5, Re14, Re19 = All_Reynolds.T
@@ -103,13 +108,13 @@ def scale_maps_reynolds(typef, ReDP, ReOD, file_name, poly_param):
 def objFOD(X):
     y_sim = []
 
-    Re25_DP = 18660698.2305537
-    Re19_DP = 26333708.4295415
-    # Re19_DP = 61973246.778017
-    # Re3_DP = 35472717.4019559
-    Re3_DP = 61973246.778017
-    Re49_DP = 22736943.8967379
-    Re5_DP = 18683167.9100408
+    # Re25_DP = 18660698.2305537
+    # Re19_DP = 26333708.4295415
+    # # Re19_DP = 61973246.778017
+    # # Re3_DP = 35472717.4019559
+    # Re3_DP = 61973246.778017
+    # Re49_DP = 22736943.8967379
+    # Re5_DP = 18683167.9100408
 
     print(X, "evals")
 
