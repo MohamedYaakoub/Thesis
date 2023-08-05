@@ -129,7 +129,7 @@ def objFOD(X):
         gspdll.InitializeModel()
 
 
-        y_sim_iter = np.array(runGsp(gspdll, GEnx_OD[i, :], output_list))
+        y_sim_iter = runGsp(gspdll, GEnx_OD[i, :], output_list)
         y_sim_iter = y_sim_iter[:6]  # ignore effs for now
         y_sim.append(y_sim_iter)
 

@@ -74,7 +74,6 @@ def create_directory(directory):
     else:
         print(f"Directory '{directory}' already exists.")
 
-
 if splines:
     directory_path = "C:/Users/mohsy/University/KLM/Thesis/My thesis/Plots/" + file_name.strip("CEOD_").strip(
         ".P") + "_splines"

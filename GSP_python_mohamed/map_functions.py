@@ -97,9 +97,9 @@ def scaling_F(ReDP, ReOD, a, b):
     return np.array(1 + a * ((ReOD - ReDP) / ReDP) + b * ((ReOD - ReDP) / ReDP) ** 2)
 
 
-_, All_Reynolds = pickle.load(open("Constants/Reynolds_set_Valid.p", "rb"))
-All_Reynolds = np.array([item for sublist in All_Reynolds for item in sublist])
-Re2, Re25, Re3, Re4, Re49, Re5, Re14, Re19 = All_Reynolds.T
+# _, All_Reynolds = pickle.load(open("Constants/Reynolds_set_Valid.p", "rb"))
+# All_Reynolds = np.array([item for sublist in All_Reynolds for item in sublist])
+# Re2, Re25, Re3, Re4, Re49, Re5, Re14, Re19 = All_Reynolds.T
 
 # def plot_SF(typef, ReOD_arr, ReDP, file_name, poly_param):
 #     X = poly_param

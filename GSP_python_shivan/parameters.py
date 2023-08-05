@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 import os
 
 path = os.getcwd()
-Foldername = "DataDocs"  # data folder name
+# Foldername = "DataDocs"  # data folder name
 #%% The function to apply corrections
 
 def correction(N, W, Pa, Ta, R=False):
@@ -222,6 +222,7 @@ datGEnxR, datGEnxC, datGEnx = loadDataGEnx()
 DPgenxAll = datGEnx['PC_TO_1B7475_2']
 
 T12dpgx = DPgenxAll.loc['T12_SEL_ChA'] + 273.15
+
 T2dpgx = DPgenxAll.loc['TT2'] + 273.15
 TT3dpgx = DPgenxAll.loc['T3_SEL_ChA'] + 273.15
 TT25dpgx = DPgenxAll.loc['T25_SEL_ChA'] + 273.15
@@ -244,6 +245,7 @@ W2dpgx = np.interp(N1KSDdpgx, np.flip(datGEnxC["ATC.N1"]), np.flip(datGEnxC["ATC
 W2dpgx, _ = correction(1, W2dpgx, Pt10dpgx, T2dpgx, True)
 
 true_val_DP_GEnx = np.array([TT25dpgx, TT3dpgx, Ps3dpgx, TT49dpgx, Fndpgx])
+
 
 g     = 1.4
 Ts    = T2dpgx/(Pt10dpgx/Ps10dpgx)**((g-1)/g)
@@ -430,7 +432,9 @@ GEnx_OD          = GEnx_OD[GEnx_OD[:, 0].argsort()]
 GEnx_OD          = np.delete(GEnx_OD, ind, 0)
 GEnx_OD          = np.delete(GEnx_OD, [-1, -2, -3], 0)  # remove points close or higher than DP
 GEnx_OD          = np.flip(GEnx_OD, axis=0)
+print(GEnx_OD[:, 0])
 
+# print(GEnx_OD_true)
 # if __name__ == "__main__":
 #     plt.figure()
 #     plt.scatter(N1p_listgx, N2p_listgx, c='orange', marker="o", edgecolors='r', s=80)
