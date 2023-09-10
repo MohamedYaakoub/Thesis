@@ -13,7 +13,6 @@ from map_functions import reset_maps, plot_maps
 iters  = 20  # the number of iterations or also known as generations
 pop    = 4 # the population size for each generation
 tol    = 0.0001  # the tolerance value for termination
-# tol    = 10 # the tolerance value for termination
 Nfeval = 1  # iteration number
 
 # bounds = [(-1, 1),   (-0.1, 0.1),   (-1, 1), (-0.1, 0.1), (-0.2, 0.2), (-0.15, 0.15),  # fanC bounds
@@ -21,18 +20,9 @@ Nfeval = 1  # iteration number
 #               (-1, 1),   (-0.1, 0.1),   (-1, 1), (-0.1, 0.1), (-0.1, 0.2), (-0.15, 0.15),    # HPC bounds
 #               (-.25, .25),   (-0.1, 0.1),  # HPT bounds
 #               (-.25, .25),   (-0.1, 0.1)]  # LPT bounds
-# x0 = [-0.1406342786398378, 0.03998946680240654, -0.019627303516216554,
-#       -0.07005805929844654, 0.05494991400449703, 0.0014290219083181288,
-#       -0.006148718993880364, -0.03026666562309781, -0.37485030931945695,
-#       -0.023378337504179204, 0.06558515042176159, -0.026524631545875397,
-#       -0.3358971894455346, 0.039868089034289095, 0.07724064473013237,
-#       0.09999623027761487, 0.07314566414903378, -0.11496762120404547,
-#       0.24714318479666414, -0.08900711137883877, 0.11565454431068517,
-#       -0.0844351677855871]
-# x0 = np.zeros((22,1))
 
 bounds = 22 * [(-1,1)]
-#
+
 # X_takeoff = [-0.9983389133736509, 0.9385307347869887, 0.034000861580716135, -0.03577821327586628, -0.9981798259300767,
 #              0.9530924154305069, -0.995700235073686, 0.8304600340231876, -0.13591022775450678, -0.11859373577835941,
 #              -0.649524267286157, 0.5760310215827391, 0.09742118796651944, 0.1789460709533659, 0.04414420344277481,
@@ -56,8 +46,6 @@ reset_maps()
 iter_Xi     = []  # list with the fittest individual of each generation
 iter_objfun = []  # list with objective function values
 iter_time   = []  # list containing the duration for each iteration
-
-
 
 
 def progress(count, total, status=''):

@@ -13,11 +13,13 @@ from _ctypes import FreeLibrary
 
 # %%
 def runGsp(gspdll, inputs, outputs):
-    if isinstance(inputs[0], float):
-        inputs = [inputs]
-    Results = [0] * len(inputs)
+    # if isinstance(inputs[0], float):
+    #     inputs = [inputs]
     # settings model, these input parameters should be specified in the GSP API
-    if inputs.ndim > 1:
+
+    # if inputs.ndim > 1:
+    if not isinstance(inputs[0], float):
+        Results = [0] * len(inputs)
         for ID, inp in enumerate(inputs):
             for i in range(0, len(inp)):
                 gspdll.SetInputControlParameterByIndex(i + 1, ctypes.c_double(inp[i]))
@@ -27,12 +29,15 @@ def runGsp(gspdll, inputs, outputs):
             # - Boolean input parameter to stabilise the simulation (true) at the current time. I.e. a
             # steady state calculation for the current input conditions will be calculated.
             # - Boolean input parameter to show (true) or hide (false) the progress bar window.
-            gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+            # gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+            gspdll.CalculateSteadyStatePoint(0, 0)
             # this is the output from the model, as specified in GSP API (the same order)
             output_set = []  # collect all the specified outputs in this list
             for j in range(1, len(outputs)+1):
-                dv = ctypes.c_double(0.)
-                gspdll.GetOutputDataParameterValueByIndex(j, ctypes.byref(dv), 0)
+                dv = ctypes.c_double()
+                # gspdll.GetOutputDataParameterValueByIndex(j, ctypes.pointer(dv), 0)
+                string_dummy = ctypes.create_string_buffer(b"", 256)
+                gspdll.GetOutputDataParameterByIndex(j, ctypes.byref(string_dummy), ctypes.byref(dv), 0)
                 output_set.append(dv.value)
             Results[ID] = output_set
     else:
@@ -45,12 +50,16 @@ def runGsp(gspdll, inputs, outputs):
         # - Boolean input parameter to stabilise the simulation (true) at the current time. I.e. a
         # steady state calculation for the current input conditions will be calculated.
         # - Boolean input parameter to show (true) or hide (false) the progress bar window.
-        gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+        # gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+        gspdll.CalculateSteadyStatePoint(0, 0)
         # this is the output from the model, as specified in GSP API (the same order)
         output_set = []  # collect all the specified outputs in this list
         for j in range(1, len(outputs) + 1):
-            dv = ctypes.c_double(0.)
-            gspdll.GetOutputDataParameterValueByIndex(j, ctypes.byref(dv), 0)
+            dv = ctypes.c_double()
+            # gspdll.GetOutputDataParameterValueByIndex(j, ctypes.pointer(dv), 0)
+
+            string_dummy = ctypes.create_string_buffer(b"", 256)
+            gspdll.GetOutputDataParameterByIndex(j, ctypes.byref(string_dummy), ctypes.byref(dv), 0)
             output_set.append(dv.value)
         Results = output_set
 

@@ -63,10 +63,10 @@ def objFOD(X):
     CV_c = scaling_F(Re9_DP, Re9, X[2], X[3], 1)
     CV_c = np.clip(CV_c, Cv_lb, Cv_ub)
 
-    CX_d = scaling_F(Re9_DP, Re19, X[4], X[5], 0.93)
+    CX_d = scaling_F(Re19_DP, Re19, X[4], X[5], 0.93)
     CX_d = np.clip(CX_d, Cx_lb, Cx_ub)
 
-    CV_d = scaling_F(Re9_DP, Re19, X[6], X[7], 1)
+    CV_d = scaling_F(Re19_DP, Re19, X[6], X[7], 1)
     CV_d = np.clip(CV_d, Cv_lb, Cv_ub)
 
     simulation_input = np.concatenate((GEnx_OD, CX_c, CV_c, CX_d, CV_d), axis=1)

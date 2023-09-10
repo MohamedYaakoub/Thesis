@@ -5,7 +5,7 @@ import time
 while True:
     try:
         # Wait for the dialog box to appear
-        app = pywinauto.Application(backend="uia").connect(title_re="Error")  # Connect to the dialog window
+        app = pywinauto.Application(backend="uia").connect(title_re="Fout")  # Connect to the dialog window
 
         # Dismiss the dialog box by clicking 'OK' or an appropriate button
         dialog = app.window(title_re=".*")

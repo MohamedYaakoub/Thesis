@@ -1,0 +1,14 @@
+C:\Users\mohsy\AppData\Local\Programs\Python\Python38-32\python.exe "C:\Users\mohsy\University\KLM\Thesis\My thesis\Code\Test_API\run_test.py" 
+Loading API and model . . .
+Loading C:\Users\mohsy\University\KLM\Thesis\My thesis\Code\Test_API\TJET_API.mxl
+Loading Complete
+Traceback (most recent call last):
+  File "C:\Users\mohsy\University\KLM\Thesis\My thesis\Code\Test_API\run_test.py", line 64, in <module>
+    run()
+  File "C:\Users\mohsy\University\KLM\Thesis\My thesis\Code\Test_API\run_test.py", line 60, in run
+    y_sim = runGsp(gspdll, input_datapoint, output_list)
+  File "C:\Users\mohsy\University\KLM\Thesis\My thesis\Code\Test_API\run_test.py", line 45, in runGsp
+    gspdll.GetOutputDataParameterValueByIndex(j, ctypes.byref(dv), 0)
+OSError: exception: access violation writing 0x5886E6FE
+
+Process finished with exit code 1

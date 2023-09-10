@@ -17,32 +17,32 @@ from matplotlib import pyplot as plt
 #                                                       "CEOD_data_mohamed_2019_feb_1-9_0.p", "rb"))
 
 
-def filter_outliers(data_array):
-    print(data_array.shape)
-
-    for i in range(data_array.shape[1]):
-        data = data_array[:, i]
-        running = True
-        print(f'data size at the beginning {data_array.shape}')
-
-        if len(data) == 0:
-            print("data is empty")
-            pass
-            # filtered_data.append([])
-        else:
-            while running:
-                q1 = np.percentile(data, 25)
-                q3 = np.percentile(data, 75)
-                iqr = q3 - q1
-                lower_bound = q1 - 1.5 * iqr
-                upper_bound = q3 + 1.5 * iqr
-                condition = (data >= lower_bound) & (data <= upper_bound)
-                if False in condition:
-                    data = data[condition]
-                    data_array = data_array[condition]
-                else:
-                    running = False
-    return data_array
+# def filter_outliers(data_array):
+#     print(data_array.shape)
+#
+#     for i in range(data_array.shape[1]):
+#         data = data_array[:, i]
+#         running = True
+#         print(f'data size at the beginning {data_array.shape}')
+#
+#         if len(data) == 0:
+#             print("data is empty")
+#             pass
+#             # filtered_data.append([])
+#         else:
+#             while running:
+#                 q1 = np.percentile(data, 25)
+#                 q3 = np.percentile(data, 75)
+#                 iqr = q3 - q1
+#                 lower_bound = q1 - 1.5 * iqr
+#                 upper_bound = q3 + 1.5 * iqr
+#                 condition = (data >= lower_bound) & (data <= upper_bound)
+#                 if False in condition:
+#                     data = data[condition]
+#                     data_array = data_array[condition]
+#                 else:
+#                     running = False
+#     return data_array
 
 
 def viz_Re():
@@ -50,6 +50,9 @@ def viz_Re():
     GEnx_OD, GEnx_OD_true, N1c, time_alt, All_Reynolds = pickle.load(open("Reynolds_pickle/"
                                                                         "Reynolds_CEOD_data_mohamed_2019_feb_1-9_1.p",
                                                                         "rb"))
+
+    # GEnx_OD, GEnx_OD_true, All_Reynolds = pickle.load(open("Clusters/Reynolds_input_clusters.p", "rb"))
+
 
     # names = ["Re2", "Re25", "Re3", "Re4", "Re49", "Re5", "Re14", "Re19"]
     # for i, name in enumerate(names):

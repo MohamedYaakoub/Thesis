@@ -74,9 +74,10 @@ def reduce_points(save=False):
             sample_indices = np.insert(np.delete(sample_indices, -1), len(arr) - 1)
         return arr[sample_indices]
 
-    def viz(norm_array, sampled_array):
+    def viz(norm_array, sampled_array, phase):
         colors = ['#4EACC5', '#FF9C34', '#4E9A06']
         idx = 4
+        plt.title(idx)
         plt.scatter(norm_array[:, 0], norm_array[:, idx], color=colors[0], marker='.')
 
         plt.plot(sampled_array[:, 0], sampled_array[:, idx], 'o', markerfacecolor=colors[1],
@@ -87,9 +88,9 @@ def reduce_points(save=False):
     sampled_climb = sampling(stacked_climb, 5)
     sampled_cruise = sampling(stacked_cruise, 5)
 
-    viz(stacked_take_off, sampled_take_off)
-    viz(stacked_climb, sampled_climb)
-    viz(stacked_cruise, sampled_cruise)
+    viz(stacked_take_off, sampled_take_off, "take off")
+    viz(stacked_climb, sampled_climb, "climb")
+    viz(stacked_cruise, sampled_cruise, "cruise")
 
 
     Genx_input_array = np.concatenate((sampled_take_off[:, :5],
@@ -130,4 +131,4 @@ def reduce_points(save=False):
     # plt.show()
 
 
-reduce_points(True)
+reduce_points(save=False)

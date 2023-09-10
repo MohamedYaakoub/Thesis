@@ -17,9 +17,9 @@ from map_functions import reset_maps
 from matplotlib import pyplot as plt
 
 # GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_set_Valid.p", "rb"))  # deal with large data set (memory problem
-# file_name = "CEOD_set_Valid.P"
+file_name = "CEOD_set_Valid.P"
 # file_name = "CEOD_200408-203904-KLM168____-KATLEHAM-KL_PH-BHA-2-956609-W010FFD.p"
-file_name = "CEOD_160724-193429-KLM891____-EHAMZUUU-KL_PH-BHA-2-956609-W007FFD.p"
+# file_name = "CEOD_160724-193429-KLM891____-EHAMZUUU-KL_PH-BHA-2-956609-W007FFD.p"
 
 GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
 # %%
@@ -33,9 +33,10 @@ GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
 
 # note: these should be identical to the parameters defined in the API module of GSP
 
-inputs_list = ["N1", "P0", "T0", "Mach", "HP", "Cv"]
+inputs_list = ["N1", "P0", "T0", "Mach", "HP"]
 # output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2", "Re_4"]  # , "PRfanc", "PRHPC"]
-output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2", "Re2", "Re25", "Re3", "Re4", "Re49", "Re5", "Re14", "Re19"]
+output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2",
+               "Re2", "Re25", "Re3", "Re4", "Re49", "Re5", "Re14", "Re19", "Re6", "Re9"]
 
 # dump the following to transfer them to the objective function file
 pickle.dump([inputs_list, output_list, GSPfileName, Engine], open("io.p", "wb"))

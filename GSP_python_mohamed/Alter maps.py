@@ -45,8 +45,8 @@ def scale_maps_reynolds(typef, ReDP, ReOD, file_name, poly_param):
                                                                  0.05, 2000), np.clip(EtaT * fe, 0.10101, 0.99), NT, BT)
 
 reset_maps()
-plot_maps('C', "3_HPC")
+# plot_maps('C', "3_HPC")
 # scale_maps_reynolds("C", None, None, "3_HPC", None)
 # scale_maps_reynolds("C", 0, 0, "1_LPC_core", 0)
-scale_maps_reynolds("C", 0, 0, "2_LPC_bypass", 0)
-plot_maps('C', "2_LPC_bypass")
+# scale_maps_reynolds("C", 0, 0, "2_LPC_bypass", 0)
+# plot_maps('C', "2_LPC_bypass")

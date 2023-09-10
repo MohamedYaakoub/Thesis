@@ -86,7 +86,7 @@ GEnx_OD = GEnx_OD[:20]
 PRs1, ETAs1, Ws1, Map1 = run_simulation(GEnx_OD)
 
 # scale_maps_reynolds("C", 0, 0, "1_LPC_core", 0)
-scale_maps_reynolds("C", 0, 0, "2_LPC_bypass", 0)
+# scale_maps_reynolds("C", 0, 0, "2_LPC_bypass", 0)
 # scale_maps_reynolds("C", 0, 0, "3_HPC", 0)
 # scale_maps_reynolds("T", 0, 0, "4_HPT", 0)
 # scale_maps_reynolds("T", 0, 0, "5_LPT", 0)
