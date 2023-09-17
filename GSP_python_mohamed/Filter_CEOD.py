@@ -149,6 +149,8 @@ for file in os.listdir(directory)[1:]:
 
         GEnx_ODL, GEnx_OD_trueL, N1cCEODL, N1CEODL, time_alt = [], [], [], [], []
 
+        fig, axes = plt.subplots(2, 2, figsize=(8, 6), dpi=200)
+
         for i, dataI in enumerate([dataTO, dataCL, dataCR2]):  #
 
             data = dataI
@@ -181,12 +183,6 @@ for file in os.listdir(directory)[1:]:
                                       # data["Selected Total Temperature at Station 12 (DEG_C)"] + 273.15
                                       )).T
 
-            GEnx_OD_true = GEnx_OD_true[GEnx_OD_true[:, 1].argsort()]
-
-            GEnx_OD_true = np.flip(GEnx_OD_true, axis=0)
-            N1CEOD = GEnx_OD_true[:, 0]
-            N1cCEOD = GEnx_OD_true[:, 2]
-            GEnx_OD_true = GEnx_OD_true[:, 3:]
 
             GEnx_OD = np.vstack((N1c,
                                  # data["Corrected Fan Speed to Station 12 (%)"],
@@ -199,11 +195,19 @@ for file in os.listdir(directory)[1:]:
                                 # data["Altitude based on P0 (FT)"],
                                 #  data["Offset"])).T
             extra_var = np.vstack((data["Altitude based on P0 (FT)"], data["Offset"])).T
+
             GEnx_OD = GEnx_OD[GEnx_OD[:, 0].argsort()]
             GEnx_OD = np.flip(GEnx_OD, axis=0)
 
-            extra_var = extra_var[extra_var[:, 0].argsort()]
+            extra_var = extra_var[GEnx_OD[:, 0].argsort()]
             extra_var = np.flip(extra_var, axis=0)
+
+            GEnx_OD_true = GEnx_OD_true[GEnx_OD[:, 0].argsort()]
+            GEnx_OD_true = np.flip(GEnx_OD_true, axis=0)
+
+            N1CEOD = GEnx_OD_true[:, 0]
+            N1cCEOD = GEnx_OD_true[:, 2]
+            GEnx_OD_true = GEnx_OD_true[:, 3:]
 
             Cv = np.full((GEnx_OD.shape[0], 1), 0.98) if i == 0 else np.full((GEnx_OD.shape[0], 1), 1)
             # GEnx_OD = np.hstack((GEnx_OD, Cv))
@@ -213,6 +217,24 @@ for file in os.listdir(directory)[1:]:
             N1CEODL.append(N1CEOD)
             time_alt.append(extra_var)
 
+
+            # axes[0, 0].scatter(data["Offset"], data["Total Engine Horsepower Extraction (HP)"], s=3, color='b', label='Re2')
+            # axes[0, 0].set_title('HP')
+            #
+            # # Customize and plot the second subplot (top-right)
+            # axes[0, 1].scatter(data["Offset"], data["Selected Mach Number (MACH)"], s=3, color='r', label='Re25')
+            # axes[0, 1].set_title('Mach')
+            # # Customize and plot the third subplot (bottom-left)
+            # axes[1, 0].scatter(data["Offset"], TsComp, s=3, color='g', label='Re4')
+            # axes[1, 0].set_title('Plot 3')
+            #
+            # axes[1, 1].scatter(data["Offset"], N1c, s=3, color='m', label='Re49')
+            # axes[1, 1].set_title('N1c')
+
+
+            # plt.scatter(data["Altitude based on P0 (FT)"], data["Total Engine Horsepower Extraction (HP)"], s=3)
+    # plt.tight_layout()
+    # plt.show()
         pickle.dump([GEnx_ODL, GEnx_OD_trueL, N1cCEODL, time_alt], open("CEOD_GEnx/same_engine_flights/CEOD_" + file.strip(".pkl") +
                                                                         f"_{flight_idx}.p", "wb"))
     # del data_original

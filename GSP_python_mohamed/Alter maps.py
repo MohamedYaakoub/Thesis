@@ -17,7 +17,7 @@ def scale_maps_reynolds(typef, ReDP, ReOD, file_name, poly_param):
 
     if typef == 'C':
         MdotC, EtaC, PRC, surge_mC, surge_pC, NC = pickle.load(open("Constants/" + file_name + "pick.p", "rb"))
-        fpr = 1
+        fpr = 3
         fm  = 1.1
         fe  = 1
 

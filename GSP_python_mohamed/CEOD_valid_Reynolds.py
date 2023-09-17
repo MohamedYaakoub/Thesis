@@ -1,32 +1,23 @@
 import pickle
 import numpy as np
-import timeit
-import sys
 from GSP_helper import cleanup, runGsp
-import subprocess
-# from Reynolds_effect_functions import scale_maps_reynolds
 from matplotlib import pyplot as plt
-from WriteCMapGSP import read_mapC, write_mapC
-from WriteTMapGSP import read_mapT, write_mapT
-
 from map_functions import reset_maps
 
 reset_maps()
 
 Engine = 1  # Enter zero for the CF6 and 1 for the GEnx
 # GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
-GSPfileName = "OffDesignGEnx_Valid_All parameters.mxl"  # this is only used for plotting
+GSPfileName = "OffDesignGEnx OD Scaling.mxl"  # this is only used for plotting
 
-file_name = "CEOD_set_Valid.P"
-# file_name = "CEOD_200408-203904-KLM168____-KATLEHAM-KL_PH-BHA-2-956609-W010FFD.P"
-# file_name = "CEOD_160724-193429-KLM891____-EHAMZUUU-KL_PH-BHA-2-956609-W007FFD.p"
-# file_name =
+# file_name = "CEOD_set_Valid.P"
+# GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
+# _, All_Reynolds = pickle.load(open("Constants/Reynolds_" + file_name.strip("CEOD_"), "rb"))
 
+file_name = "CEOD_data_mohamed_2019_feb_1-9_1.p"
+GEnx_OD, GEnx_OD_true, N, alt_time, All_Reynolds = pickle.load(open("Reynolds_pickle/Reynolds_" + file_name, "rb"))
 
-GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
-_, All_Reynolds = pickle.load(open("Constants/Reynolds_" + file_name.strip("CEOD_"), "rb"))
-
-Re2_DP, Re25_DP, Re3_DP, Re4_DP, Re49_DP, Re5_DP, Re14_DP, Re19_DP = All_Reynolds[0][0, :].T
+Re2_DP, Re25_DP, Re3_DP, Re4_DP, Re49_DP, Re5_DP, Re14_DP, Re19_DP, _, _ = All_Reynolds[0][0, :].T
 
 from my_modified_functions import gspdll
 
@@ -39,23 +30,20 @@ output_list = ["TT25", "TT3", "Ps3", "TT49", "Wf", "N2",
 
 pickle.dump([inputs_list, output_list, GSPfileName, Engine], open("io.p", "wb"))
 
-X = [-0.9924531509396756, 0.9493111782594137, 0.015398502958351434, -0.5188458123089683, -0.22308564787498586,
-     -0.730856647237857, 0.37248086082138787, 0.27039831352397137, -0.9584642768648018, -0.3295273625460893,
-     -0.5905141960366497, -0.6997725432657045, -0.06270267183037614, -0.4289624389993987, 0.05691519027254244,
-     -0.18430762512912546, 0.28719233155558155, -0.7437196774085011, -0.61251462659736, 0.28412132635236453,
-     -0.8649627124131621, 0.12693395455166834]
+X = [0.03108588422207266, 0.02567619660579215, 0.007149626032918022, 0.017087814396480966,
+     -0.09674097350611965, 0.013906217694496653, -0.09455849175478899, 0.00828532128394946,
+     0.042652297505362174, -0.0081375030413752, 0.05059589749640184, -0.0007653113564509151,
+     0.021004053043303397, 0.0402277436164645, 0.03290261764660938, 0.01442539496720846,
+     -0.0700287864467976, -0.13871223330448718, -0.046010533084381904, 0.02678507938839153,
+     -0.06295842712479592, -0.11441280321325185]
 
-X_takeoff = X
+# X_takeoff = X
 X_climb = X
 X_cruise = X
 
-splines = False
+splines = True
 
-# X_takeoff = [-0.9983389133736509, 0.9385307347869887, 0.034000861580716135, -0.03577821327586628, -0.9981798259300767,
-#              0.9530924154305069, -0.995700235073686, 0.8304600340231876, -0.13591022775450678, -0.11859373577835941,
-#              -0.649524267286157, 0.5760310215827391, 0.09742118796651944, 0.1789460709533659, 0.04414420344277481,
-#              0.1036752582677658, -0.5609002492275668, 0.8606842835909971, -0.423764318345767, 0.45272003883100775,
-#              0.2975860084469224, -0.48489697839506674]
+X_takeoff = [0] * 22
 #
 # X_climb = [-0.39151153304030584, -0.3572569487085121, -0.11508814965214664, 0.6040357595244259, -0.5473006373047256,
 #            -0.4337901143312386, -0.9781608146532708, 0.9872048995550504, -0.9250162770160874, -0.3300894211317793,
@@ -86,71 +74,40 @@ def scale_maps_reynolds(typef, ReDP, ReOD, file_name, poly_param):
     X = poly_param
 
     if typef == 'C':
-        MdotC, EtaC, PRC, surge_mC, surge_pC, NC = pickle.load(open("Constants/" + file_name + "pick.p", "rb"))
-        fpr = scaling_F(ReDP, ReOD, X[0], X[1])
         fm = scaling_F(ReDP, ReOD, X[2], X[3])
+        fpr = scaling_F(ReDP, ReOD, X[0], X[1])
         fe = scaling_F(ReDP, ReOD, X[4], X[5])
-
-        surgeN = np.unique(NC)
-
-        fsurge_pr = scaling_F(ReDP, surgeN, X[0], X[1])
-        fsurge_m = scaling_F(ReDP, surgeN, X[2], X[3])
-        fsurge_m = np.insert(fsurge_m, 0, 1)
-        fsurge_pr = np.insert(fsurge_pr, 0, 1)
-        # print('MdotC:', MdotC * fm)
-        # print('EtaC:', EtaC * fe)
-        # print('PRC:', PRC * fpr)
-
-        write_mapC(file_name, file_name, np.clip(MdotC * fm, 0.05, 2000), np.clip(EtaC * fe, 0.10101, 0.99),
-                   np.clip(PRC * fpr, 0.05, 100), np.clip(surge_mC * fsurge_m, 0.05, 2000),
-                   np.clip(surge_pC * fsurge_pr, 0.05, 100), NC)
+        return np.clip(fm, 0.8, 1.05), np.clip(fpr, 0.8, 1.05), np.clip(fe, 0.8, 1.05)
     else:
-        PRmin, PRmax, MdotT, EtaT, NPrT, NT, BT = pickle.load(open("Constants/" + file_name + "pick.p", "rb"))
-        # fpr = scaling_F(Ndp / 100, NPrT[1:], X[0], X[1])
-        # fm  = scaling_F(Ndp / 100, NT, X[2], X[3])
         fe = scaling_F(ReDP, ReOD, X[0], X[1])
-        # fpr = np.insert(fpr, 0, 1)
-
-        write_mapT(file_name, file_name, np.clip(PRmin * 1, 0, 100), np.clip(PRmax * 1, 0, 100), np.clip(MdotT * 1,
-                                                                                                         0.05, 2000),
-                   np.clip(EtaT * fe, 0.10101, 0.99), NT, BT)
-
+        return np.clip(fe, 0.8, 1.05)
 
 def simulate(Re, inputDat, X):
     y_sim = []
 
-    # Re25_DP = 18660698.2305537
-    # Re19_DP = 26333708.4295415
-    #
-    # # Re19_DP = 61973246.778017
-    # # Re3_DP = 35472717.4019559
-    #
-    # Re3_DP = 61973246.778017
-    # Re49_DP = 22736943.8967379
-    # Re5_DP = 18683167.9100408
-
-    Re2_i, Re25_i, Re3_i, Re4_i, Re49_i, Re5_i, Re14_i, Re19_i = Re.T
+    Re2_i, Re25_i, Re3_i, Re4_i, Re49_i, Re5_i, Re14_i, Re19_i, _, _ = Re.T
     # print(Re25_i[0], Re3_i[0], Re49_i[0], Re5_i[0], Re19_i[0])
-    for i in range(len(inputDat)):
-        # scale_maps_reynolds("C", Re25_i[0], Re25_i[i], "1_LPC_core", X[:6])
-        # scale_maps_reynolds("C", Re19_i[0], Re19_i[i], "2_LPC_bypass", X[6:12])
-        # scale_maps_reynolds("C", Re3_i[0], Re3_i[i], "3_HPC", X[12:18])
-        # scale_maps_reynolds("T", Re49_i[0], Re49_i[i], "4_HPT", X[18:20])
-        # scale_maps_reynolds("T", Re5_i[0], Re5_i[i], "5_LPT", X[20:22])
-        scale_maps_reynolds("C", Re25_DP, Re25_i[i], "1_LPC_core", X[:6])
-        scale_maps_reynolds("C", Re19_DP, Re19_i[i], "2_LPC_bypass", X[6:12])
-        scale_maps_reynolds("C", Re3_DP, Re3_i[i], "3_HPC", X[12:18])
-        scale_maps_reynolds("T", Re49_DP, Re49_i[i], "4_HPT", X[18:20])
-        scale_maps_reynolds("T", Re5_DP, Re5_i[i], "5_LPT", X[20:22])
-        gspdll.InitializeModel()
 
-        y_sim_iter = np.array(runGsp(gspdll, inputDat[i], output_list))
-        # y_sim_iter = y_sim_iter[:6]  # ignore effs for now
+    for i in range(len(inputDat)):
+        Fan_c_fm, Fan_c_fpr, Fan_c_fe = scale_maps_reynolds("C", Re25_DP, Re25_i[i], "1_LPC_core", X[:6])
+        Fan_d_fm, Fan_d_fpr, Fan_d_fe = scale_maps_reynolds("C", Re19_DP, Re19_i[i], "2_LPC_bypass", X[6:12])
+        HPC_fm, HPC_fpr, HPC_fe = scale_maps_reynolds("C", Re3_DP, Re3_i[i], "3_HPC", X[12:18])
+        HPT_fe = scale_maps_reynolds("T", Re49_DP, Re49_i[i], "4_HPT", X[18:20])
+        LPT_fe = scale_maps_reynolds("T", Re5_DP, Re5_i[i], "5_LPT", X[20:22])
+
+        OD_scaling_array = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
+                                     Fan_d_fm, Fan_d_fpr, Fan_d_fe,
+                                     HPC_fm, HPC_fpr, HPC_fe,
+                                     1, 1, HPT_fe,
+                                     1, 1, LPT_fe])
+        # print(OD_scaling_array)
+
+        run_gsp_input = np.concatenate((inputDat[i, :], OD_scaling_array), axis=0)
+        y_sim_iter = runGsp(gspdll, run_gsp_input, output_list)
+        y_sim_iter = y_sim_iter[:6]  # ignore effs for now
         y_sim.append(y_sim_iter)
 
-    y_sim = np.array(y_sim)
-
-    return y_sim
+    return np.array(y_sim)
 
 
 # %%

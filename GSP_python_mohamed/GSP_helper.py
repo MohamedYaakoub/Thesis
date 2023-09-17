@@ -29,8 +29,8 @@ def runGsp(gspdll, inputs, outputs):
             # - Boolean input parameter to stabilise the simulation (true) at the current time. I.e. a
             # steady state calculation for the current input conditions will be calculated.
             # - Boolean input parameter to show (true) or hide (false) the progress bar window.
-            # gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
-            gspdll.CalculateSteadyStatePoint(0, 0)
+            gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+            # gspdll.CalculateSteadyStatePoint(0, 0)
             # this is the output from the model, as specified in GSP API (the same order)
             output_set = []  # collect all the specified outputs in this list
             for j in range(1, len(outputs)+1):
@@ -50,8 +50,8 @@ def runGsp(gspdll, inputs, outputs):
         # - Boolean input parameter to stabilise the simulation (true) at the current time. I.e. a
         # steady state calculation for the current input conditions will be calculated.
         # - Boolean input parameter to show (true) or hide (false) the progress bar window.
-        # gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
-        gspdll.CalculateSteadyStatePoint(0, 0)
+        gspdll.RunModel(0, 0, 0, 0)  # run the gsp model
+        # gspdll.CalculateSteadyStatePoint(0, 0)
         # this is the output from the model, as specified in GSP API (the same order)
         output_set = []  # collect all the specified outputs in this list
         for j in range(1, len(outputs) + 1):

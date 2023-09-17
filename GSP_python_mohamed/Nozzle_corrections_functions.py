@@ -14,7 +14,8 @@ from my_modified_functions import gspdll
 Engine = 1  # Enter zero for the CF6 and 1 for the GEnx
 GSPfileName = "OffDesignGEnx Nozzles.mxl"  # "GEnx-1B_V3_test2.mxl"  #
 
-GEnx_OD, GEnx_OD_true, Alt_time, All_Reynolds = pickle.load(open("Clusters/Reynolds_CEOD_data_mohamed_2019_feb_1-9_1_sampled.p", "rb"))
+GEnx_OD, GEnx_OD_true, Alt_time, All_Reynolds = pickle.load(open(
+    "Sampled flights/Reynolds_CEOD_data_mohamed_2019_feb_1-9_1_sampled.p", "rb"))
 
 Re25_DP = All_Reynolds[0, 1]
 Re3_DP = All_Reynolds[0, 2]

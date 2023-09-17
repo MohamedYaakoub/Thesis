@@ -39,7 +39,8 @@ def nozzle_coefficients(X, DP_array, OD_array):
 
     return CX_c, CV_c, CX_d, CV_d
 
-GEnx_OD, GEnx_OD_true, Alt_time, All_Reynolds = pickle.load(open("Clusters/Reynolds_CEOD_data_mohamed_2019_feb_1-9_1_sampled.p", "rb"))
+GEnx_OD, GEnx_OD_true, Alt_time, All_Reynolds = pickle.load(open(
+    "Sampled flights/Reynolds_CEOD_data_mohamed_2019_feb_1-9_1_sampled.p", "rb"))
 
 Re25_DP = All_Reynolds[0, 1]
 Re3_DP = All_Reynolds[0, 2]
