@@ -39,8 +39,10 @@ attributes = [
     'Altitude based on P0 (FT)',
     'Selected Calibrated Air Speed (KNOTS)',
     'Selected Mach Number (MACH)',
-    'Header: Start Date'
-]
+    'flight_id',
+    'fan_speed_from_emu_rpm',
+    'fan_speed_selection_status']
+
 
 keys = [
     'selected_ambient_static_pressure_psia',
@@ -83,11 +85,10 @@ keys = [
     'altitude',
     'selected_calibrated_air_speed_knots',
     'selected_mach_number_mach',
-    'departure_datetime'
-]
+    'flight_id',
+    'fan_speed_from_emu_rpm',
+'fan_speed_selection_status']
 
 # Creating the dictionary
 convert_CEOD_ZOE = dict(zip(keys, attributes))
-
-# print(convert_CEOD_ZOE)
 

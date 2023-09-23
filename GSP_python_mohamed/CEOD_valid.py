@@ -6,22 +6,16 @@
 """
 import pickle
 import numpy as np
-import timeit
-import sys
 from GSP_helper import cleanup, runGsp
-import subprocess
 from map_functions import reset_maps
-
-# sys.path.insert(1, "C:/Users/mohsy/University/KLM/Thesis/My thesis/Code/GSP_python_mohamed/GSP_files/")
-
 from matplotlib import pyplot as plt
 
 
-file_name = "CEOD_set_Valid.P"
-GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
+# file_name = "CEOD_set_Valid.P"
+# GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
 
-# file_name = "CEOD_data_mohamed_2019_feb_1-9_1.p"
-# GEnx_OD, GEnx_OD_true, N1cCEOD, alt_time = pickle.load(open("CEOD_GEnx/same_engine_flights/" + file_name, "rb"))
+file_name = "CEOD_data_mohamed_2019_feb_1-9_1.p"
+GEnx_OD, GEnx_OD_true, N1cCEOD, alt_time = pickle.load(open("CEOD_GEnx/same_engine_flights/" + file_name, "rb"))
 # # %%
 Engine = 1  # Enter zero for the CF6 and 1 for the GEnx
 GSPfileName = "OffDesignGEnx Valid_Shivan.mxl"  # "GEnx-1B_V3_test2.mxl"  #
@@ -77,6 +71,7 @@ def run_validation():
         trueVal = j
         N1cCEODi = k
         print(inputDat.shape)
+        gspdll.InitializeModel()
         mean, change, Eta, Reynolds = compute_error(inputDat, trueVal)
         meanL.append(list(mean))
         stdL.append(list(np.std(change, axis=0)))

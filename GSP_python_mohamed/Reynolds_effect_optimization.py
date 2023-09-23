@@ -7,53 +7,41 @@ import sys
 from GSP_helper import cleanup, runGsp
 from matplotlib import pyplot as plt
 
-from Reynolds_effect_functions import*
+from Reynolds_effect_functions import *
 from map_functions import reset_maps, plot_maps
 
-iters  = 50  # the number of iterations or also known as generations
-pop    = 4 # the population size for each generation
-tol    = 0.0001  # the tolerance value for termination
+iters = 50  # the number of iterations or also known as generations
+pop = 4  # the population size for each generation
+tol = 0.0001  # the tolerance value for termination
 Nfeval = 1  # iteration number
 
-bounds = [(-0.1, 0.1),   (-0.25, 0.1),   (-0.1, 0.1),   (-0.25, 0.1), (-0.1, 0.1),   (-0.25, 0.1),  # fanC bounds
-              (-0.1, 0.1),   (-0.2, 0.05),   (-0.1, 0.1),   (-0.2, 0.05), (-0.1, 0.1),   (-0.2, 0.05),  # fanB bounds
-              (-0.1, 0.1),   (-0.2, 0.05),   (-0.1, 0.1),   (-0.2, 0.05), (-0.1, 0.1),   (-0.2, 0.05),    # HPC bounds
-              (-0.1, 0.1),   (-0.2, 0.05),  # HPT bounds
-              (-0.1, 0.1),   (-0.2, 0.05)]  # LPT bounds
+# bounds = [(-0.1, 0.1),   (-0.25, 0.1),   (-0.1, 0.1),   (-0.25, 0.1), (-0.1, 0.1),   (-0.25, 0.1),  # fanC bounds
+#               (-0.1, 0.1),   (-0.2, 0.05),   (-0.1, 0.1),   (-0.2, 0.05), (-0.1, 0.1),   (-0.2, 0.05),  # fanB bounds
+#               (-0.1, 0.1),   (-0.2, 0.05),   (-0.1, 0.1),   (-0.2, 0.05), (-0.1, 0.1),   (-0.2, 0.05),    # HPC bounds
+#               (-0.1, 0.1),   (-0.2, 0.05),  # HPT bounds
+#               (-0.1, 0.1),   (-0.2, 0.05)]  # LPT bounds
+
+bounds = [(-0.1, 0.1), (-0.25, 0.1), (-0.1, 0.1), (-0.25, 0.1),  # fanC bounds
+          (-0.1, 0.1), (-0.25, 0.1), (-0.1, 0.1), (-0.25, 0.1),  # fanB bounds
+          (-0.1, 0.1), (-0.2, 0.1), (-0.1, 0.1), (-0.2, 0.1),  # HPC bounds
+          (-0.1, 0.1), (-0.2, 0.1),  # HPT bounds
+          (-0.1, 0.1), (-0.2, 0.1)]  # LPT bounds
 
 # bounds = 22 * [(-1,1)]
 
-# X_takeoff = [-0.9983389133736509, 0.9385307347869887, 0.034000861580716135, -0.03577821327586628, -0.9981798259300767,
-#              0.9530924154305069, -0.995700235073686, 0.8304600340231876, -0.13591022775450678, -0.11859373577835941,
-#              -0.649524267286157, 0.5760310215827391, 0.09742118796651944, 0.1789460709533659, 0.04414420344277481,
-#              0.1036752582677658, -0.5609002492275668, 0.8606842835909971, -0.423764318345767, 0.45272003883100775,
-#              0.2975860084469224, -0.48489697839506674]
 
-# X_climb = [-0.39151153304030584, -0.3572569487085121, -0.11508814965214664, 0.6040357595244259, -0.5473006373047256,
-#            -0.4337901143312386, -0.9781608146532708, 0.9872048995550504, -0.9250162770160874, -0.3300894211317793,
-#            -0.7196445323625377, -0.63761329701412, -0.37761050930438855, 0.37409468505190535, -0.7169121028867804,
-#            0.504095168408869, 0.004084270145224167, 0.5007723795343721, -0.0414428972840476, 0.47249205746563394,
-#            -0.7884995578550504, -0.2725844710128533]
+# x0 = [0] * 16
+x0 = [-0.04371352, 0.0813069, -0.09591862, 0.08377887, -0.07021975,
+      -0.0691131, -0.05098189, 0.09924948, 0.04400945, -0.19977984,
+      0.03704963, 0.00522859, -0.00374285, 0.02801069, -0.03519336,
+      -0.06247652]
 
-# X_cruise = [0.57412476, -0.90224694, 0.08398058, -0.30101288, -0.04481059, -0.10244869, 0.4126201, 0.26567765,
-#             -0.5879205, -0.29147754, 0.65966397, -0.28873865, -0.16545684, 0.63965032, -0.9634026, 0.65153249,
-#             -0.00253814, -0.84644459, -0.21551771, 0.20316737, -0.94047361, -0.05217237]
+# reset_maps()
 
-# x0 = [0] * 22
-x0 = [0.03108588422207266, 0.02567619660579215, 0.007149626032918022, 0.017087814396480966,
-     -0.09674097350611965, 0.013906217694496653, -0.09455849175478899, 0.00828532128394946,
-     0.042652297505362174, -0.0081375030413752, 0.05059589749640184, -0.0007653113564509151,
-     0.021004053043303397, 0.0402277436164645, 0.03290261764660938, 0.01442539496720846,
-     -0.0700287864467976, -0.13871223330448718, -0.046010533084381904, 0.02678507938839153,
-     -0.06295842712479592, -0.11441280321325185]
-
-reset_maps()
-
-iter_Xi     = []  # list with the fittest individual of each generation
+iter_Xi = []  # list with the fittest individual of each generation
 iter_objfun = []  # list with objective function values
-iter_time   = []  # list containing the duration for each iteration
+iter_time = []  # list containing the duration for each iteration
 
-file = open('New solves OD scaling/Running solve.txt', 'w')
 
 def progress(count, total, status=''):
     bar_len = 50
@@ -65,22 +53,29 @@ def progress(count, total, status=''):
     sys.stdout.write('\r%s' '/' '%s %s %s%s %s' % (count, total, bar, percents, '%', status))
     sys.stdout.flush()
 
+
 def callbackF(Xi, convergence):  # only 1 input variable for scipy.optimize.minimize
-# def callbackF(Xi):  # only 1 input variable for scipy.optimize.minimize
+    # def callbackF(Xi):  # only 1 input variable for scipy.optimize.minimize
     global Nfeval
     global iters
     print(Xi, "iters")
-    file.write(str(Xi) + " iters")
+    file = open('New solves OD scaling/Running solve.txt', 'a')
+    file.write(str(Xi) + " iters\n")
+    file.close()
     time = timeit.default_timer()
     iter_Xi.append(Xi)
     # iter_objfun.append(objFOD(Xi))
     iter_time.append(time)
+
+    pickle.dump([iter_time, iter_Xi], open("New solves OD scaling/solver output.p", "wb"))
     status = "GA is running..."
     if Nfeval == iters:
         status = "GA finished"
     progress(Nfeval, iters, status=status)
     Nfeval += 1
 
+
+# constraints = ({'type': 'eq', 'fun': equality_constraint_cruise_climb_smoothness})
 
 
 start = timeit.default_timer()  # initiate time
@@ -98,7 +93,7 @@ result = differential_evolution(objFOD,
                                 # callback=callbackF,
                                 disp=True,
                                 callback=callbackF,
-                                mutation=[0, 1],   # todo: changed
+                                mutation=[0, 1],  # todo: changed
                                 seed=5325,  # 5325
                                 recombination=0.7)
 
@@ -108,14 +103,12 @@ result = differential_evolution(objFOD,
 #                                  callback=callbackF, options={'disp': True})
 
 
-
-
 end = timeit.default_timer()  # end time
 y_sim = np.array(runGsp(gspdll, GEnx_OD, output_list))[:, :6]
 y_true = GEnx_OD_true
 # %%
 Rms = np.sqrt(np.mean(((y_true - y_sim) / (y_true + 0.000001)) ** 2, axis=0))
-error_mat = (y_true-y_sim)/y_true
+error_mat = (y_true - y_sim) / y_true
 print(result)
 print('\n %s %s' % ("      Objective:", result['fun']))
 print('%s %s' % ("Design variables:", list(result['x'])))
@@ -128,7 +121,7 @@ plt.ylabel('Objective function')
 plt.title('Genetic Algorithm')
 plt.show()
 # plot the time for each iter
-plt.scatter(range(1, len(iter_time)), [(iter_time[i+1]-iter_time[i])/60 for i in range(len(iter_time)-1)])
+plt.scatter(range(1, len(iter_time)), [(iter_time[i + 1] - iter_time[i]) / 60 for i in range(len(iter_time) - 1)])
 plt.xlabel('Iteration')
 plt.ylabel('Time [min]')
 plt.title('Genetic Algorithm time')
@@ -136,11 +129,11 @@ plt.show()
 
 # %% plot the resulting and starting maps
 
-plot_maps('C', "1_LPC_core")
-plot_maps('C', "2_LPC_bypass")
-plot_maps('C', "3_HPC")
-plot_maps('T', "4_HPT")
-plot_maps('T', "5_LPT")
+# plot_maps('C', "1_LPC_core")
+# plot_maps('C', "2_LPC_bypass")
+# plot_maps('C', "3_HPC")
+# plot_maps('T', "4_HPT")
+# plot_maps('T', "5_LPT")
 
 # %% plot the scaling factors
 # plot_SF(1, 'C',  "1_LPC_core", result['x'][:6])
@@ -149,11 +142,11 @@ plot_maps('T', "5_LPT")
 # plot_SF(2, 'T', "4_HPT", result['x'][18:20])
 # plot_SF(1, 'T', "5_LPT", result['x'][20:22])
 # %%
-print("1_LPC_core   :", result['x'][:6])
-print("2_LPC_bypass :", result['x'][6: 12])
-print("3_HPC        :", result['x'][12: 18])
-print("4_HPT        :", result['x'][18:20])
-print("5_LPT        :", result['x'][20:22])
+# print("1_LPC_core   :", result['x'][:6])
+# print("2_LPC_bypass :", result['x'][6: 12])
+# print("3_HPC        :", result['x'][12: 18])
+# print("4_HPT        :", result['x'][18:20])
+# print("5_LPT        :", result['x'][20:22])
 
 # %%
 cleanup(gspdll)

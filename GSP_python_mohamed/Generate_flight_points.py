@@ -30,13 +30,13 @@ def filter_outliers(data_array):
 
 
 def reduce_points(save=False):
-    file = "Reynolds_CEOD_data_mohamed_2019_feb_1-9_1.p"
-    GEnx_OD, GEnx_OD_true, N1c, time_alt, All_Reynolds = pickle.load(open("Reynolds_pickle/"
+    file = "Reynolds_CEOD_data_mohamed_2019_feb_1-9_2.p"
+    GEnx_OD, GEnx_OD_true, N1c, alt_time, All_Reynolds = pickle.load(open("Reynolds_pickle/"
                                                                           + file,
                                                                           "rb"))
     take_off_GEnx_OD, climb_GEnx_OD, cruise_GEnx_OD = GEnx_OD
     take_off_GEnx_OD_true, climb_GEnx_OD_true, cruise_GEnx_OD_true = GEnx_OD_true
-    take_off_alt_time, climb_alt_time, cruise_alt_time = time_alt
+    take_off_alt_time, climb_alt_time, cruise_alt_time = alt_time
     take_off_All_Reynolds, climb_All_Reynolds, cruise_All_Reynolds = All_Reynolds
     #
     # print(take_off_GEnx_OD.shape)
@@ -64,13 +64,7 @@ def reduce_points(save=False):
         cruise_All_Reynolds),
         axis=1)
 
-    stacked_cruise = stacked_cruise[np.where(cruise_alt_time[:, 0] < 34500)]
-    stacked_cruise = filter_outliers(stacked_cruise)
-    print(stacked_cruise.shape)
 
-    # stacked_take_off = filter_outliers(stacked_take_off)
-    # stacked_climb = filter_outliers(stacked_climb)
-    # stacked_cruise = filter_outliers(stacked_cruise)
 
     def get_sampling_indices(arr, no_of_samples):
         min_val = min(arr)
@@ -96,9 +90,9 @@ def reduce_points(save=False):
         colors = ['#4EACC5', '#FF9C34', '#4E9A06']
         idx = 4
         plt.title(idx)
-        plt.scatter(norm_array[:, 0], norm_array[:, idx], color=colors[0], marker='.')
+        plt.scatter(norm_array[:, 12], norm_array[:, 0], color=colors[0], marker='.')
 
-        plt.plot(sampled_array[:, 0], sampled_array[:, idx], 'o', markerfacecolor=colors[1],
+        plt.plot(sampled_array[:, 12], sampled_array[:, 0], 'o', markerfacecolor=colors[1],
                  markeredgecolor='k', markersize=6)
         plt.show()
 

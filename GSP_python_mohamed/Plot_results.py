@@ -3,43 +3,17 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt
 
-# X = [-0.9924531509396756, 0.9493111782594137, 0.015398502958351434,
-#      -0.5188458123089683, -0.22308564787498586, -0.730856647237857,
-#      0.37248086082138787, 0.27039831352397137, -0.9584642768648018,
-#      -0.3295273625460893, -0.5905141960366497, -0.6997725432657045,
-#      -0.06270267183037614, -0.4289624389993987, 0.05691519027254244,
-#      -0.18430762512912546, 0.28719233155558155, -0.7437196774085011,
-#      -0.61251462659736, 0.28412132635236453, -0.8649627124131621,
-#      0.12693395455166834]
+X = [0.04995546, 0.02878598, -0.00712323, 0.01510955, -0.08778622, -0.05025517,
+     - 0.09904944, 0.04936974, 0.03271384, -0.01814827, 0.05167898, 0.03520765,
+     0.02111619, 0.04719428, 0.03002022, -0.00058276, -0.05902952, -0.14813571,
+     -0.03774783, 0.04783216, -0.0081694, -0.04824031]
 
-X = [-0.9924531509396756, 0.9493111782594137, 0.015398502958351434, -0.5188458123089683, -0.22308564787498586,
-     -0.730856647237857, 0.37248086082138787, 0.27039831352397137, -0.9584642768648018, -0.3295273625460893,
-     -0.5905141960366497, -0.6997725432657045, -0.06270267183037614, -0.4289624389993987, 0.05691519027254244,
-     -0.18430762512912546, 0.28719233155558155, -0.7437196774085011, -0.61251462659736, 0.28412132635236453,
-     -0.8649627124131621, 0.12693395455166834]
 X_takeoff = X
 X_climb = X
 X_cruise = X
 
 splines = False
 
-
-#
-# X_takeoff = [-0.9983389133736509, 0.9385307347869887, 0.034000861580716135, -0.03577821327586628, -0.9981798259300767,
-#              0.9530924154305069, -0.995700235073686, 0.8304600340231876, -0.13591022775450678, -0.11859373577835941,
-#              -0.649524267286157, 0.5760310215827391, 0.09742118796651944, 0.1789460709533659, 0.04414420344277481,
-#              0.1036752582677658, -0.5609002492275668, 0.8606842835909971, -0.423764318345767, 0.45272003883100775,
-#              0.2975860084469224, -0.48489697839506674]
-#
-# X_climb = [-0.39151153304030584, -0.3572569487085121, -0.11508814965214664, 0.6040357595244259, -0.5473006373047256,
-#            -0.4337901143312386, -0.9781608146532708, 0.9872048995550504, -0.9250162770160874, -0.3300894211317793,
-#            -0.7196445323625377, -0.63761329701412, -0.37761050930438855, 0.37409468505190535, -0.7169121028867804,
-#            0.504095168408869, 0.004084270145224167, 0.5007723795343721, -0.0414428972840476, 0.47249205746563394,
-#            -0.7884995578550504, -0.2725844710128533]
-#
-# X_cruise = [0.57412476, -0.90224694, 0.08398058, -0.30101288, -0.04481059, -0.10244869, 0.4126201, 0.26567765,
-#             -0.5879205, -0.29147754, 0.65966397, -0.28873865, -0.16545684, 0.63965032, -0.9634026, 0.65153249,
-#             -0.00253814, -0.84644459, -0.21551771, 0.20316737, -0.94047361, -0.05217237]
 
 # splines = True
 
@@ -53,18 +27,21 @@ def scaling_F(ReDP, ReOD, a, b):
     return np.array(1 + a * ((ReOD - ReDP) / ReDP) + b * ((ReOD - ReDP) / ReDP) ** 2)
 
 
-file_name = "CEOD_set_Valid.P"
-# file_name = "CEOD_200408-203904-KLM168____-KATLEHAM-KL_PH-BHA-2-956609-W010FFD.P"
-# file_name = "CEOD_160724-193429-KLM891____-EHAMZUUU-KL_PH-BHA-2-956609-W007FFD.p"
+# file_name = "CEOD_set_Valid.P"
+GSPfileName = "OffDesignGEnx_Valid_All parameters.mxl"
 
 
-GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
-_, All_Reynolds = pickle.load(open("Constants/Reynolds_" + file_name.strip("CEOD_"), "rb"))
+file_name = "CEOD_data_mohamed_2019_feb_1-9_1.p"
+
+GEnx_OD, GEnx_OD_true, N, alt_time, All_Reynolds = pickle.load(open("Reynolds_pickle/Reynolds_" + file_name, "rb"))
+Re2_DP, Re25_DP, Re3_DP, Re4_DP, Re49_DP, Re5_DP, Re14_DP, Re19_DP, _, _ = All_Reynolds[0][0, :].T
+
+
 if splines:
-    ALL_PRs, All_ETAs, All_Ws = pickle.load(open("Results/Results_" + file_name.strip("CEOD_"), "rb"))
+    All_Valid_params, ALL_PRs, All_ETAs, All_Ws = pickle.load(open("Results/Results_" + file_name.strip("CEOD_"), "rb"))
 else:
-    ALL_PRs, All_ETAs, All_Ws = pickle.load(open("Results/Results_one_equation_" + file_name.strip("CEOD_"), "rb"))
-    print("one equation")
+    All_Valid_params, ALL_PRs, All_ETAs, All_Ws = pickle.load(open("Results/Results_one_equation_" + file_name.strip("CEOD_"), "rb"))
+    print("one ALL_PRs")
 
 
 def create_directory(directory):
@@ -73,6 +50,7 @@ def create_directory(directory):
         print(f"Directory '{directory}' created successfully.")
     else:
         print(f"Directory '{directory}' already exists.")
+
 
 if splines:
     directory_path = "C:/Users/mohsy/University/KLM/Thesis/My thesis/Plots/" + file_name.strip("CEOD_").strip(
@@ -87,16 +65,13 @@ for i, flight_cond in enumerate(["Take Off", "Climb", "Cruise"]):
     OPR, PRc_Fan, PRd_Fan, PR_HPC, PR_HPT, PR_LPT = ALL_PRs[i].T
     ETAc_Fan, ETAd_Fan, ETA_HPC, ETA_HPT, ETA_LPT = All_ETAs[i].T
     W_14, W_25, W_4 = All_Ws[i].T
-
-    _, Re25_DP, Re3_DP, _, Re49_DP, Re5_DP, _, Re19_DP = All_Reynolds[0].T[:, 0]
-
     # Re19_DP = Re19[0]
     # Re25_DP = Re25[0]
     # Re3_DP = Re3[0]
     # Re49_DP = Re4[0]
     # Re5_DP = Re5[0]
 
-    Re2, Re25, Re3, Re4, Re49, Re5, Re14, Re19 = All_Reynolds[i].T
+    Re2, Re25, Re3, Re4, Re49, Re5, Re14, Re19, _, _ = All_Reynolds[i].T
     N1 = GEnx_OD[i][:, 0]
 
 

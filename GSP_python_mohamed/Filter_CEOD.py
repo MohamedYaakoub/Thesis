@@ -235,8 +235,8 @@ for file in os.listdir(directory)[1:]:
             # plt.scatter(data["Altitude based on P0 (FT)"], data["Total Engine Horsepower Extraction (HP)"], s=3)
     # plt.tight_layout()
     # plt.show()
-        pickle.dump([GEnx_ODL, GEnx_OD_trueL, N1cCEODL, time_alt], open("CEOD_GEnx/same_engine_flights/CEOD_" + file.strip(".pkl") +
-                                                                        f"_{flight_idx}.p", "wb"))
+    #     pickle.dump([GEnx_ODL, GEnx_OD_trueL, N1cCEODL, time_alt], open("CEOD_GEnx/same_engine_flights/CEOD_" + file.strip(".pkl") +
+    #                                                                     f"_{flight_idx}.p", "wb"))
     # del data_original
         # flight_phase = 0
         # N2_boxplot_take_off.append(GEnx_ODL[flight_phase][:, 0])
