@@ -87,7 +87,9 @@ keys = [
     'selected_mach_number_mach',
     'flight_id',
     'fan_speed_from_emu_rpm',
-'fan_speed_selection_status']
+'fan_speed_selection_status',
+"header__departure_airport",
+"header__destination_airport"]
 
 # Creating the dictionary
 convert_CEOD_ZOE = dict(zip(keys, attributes))

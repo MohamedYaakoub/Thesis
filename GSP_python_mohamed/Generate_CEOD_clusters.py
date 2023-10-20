@@ -14,9 +14,9 @@ from sklearn.datasets import make_blobs
 
 
 def group_CEOD():
-    CEOD_pickles = os.listdir('CEOD_GEnx')
-    CEOD_pickles.remove('csv files')
-    CEOD_pickles.remove('CEOD_set_Valid.p')
+    CEOD_pickles = os.listdir('CEOD_GEnx\same_engine_flights')
+    # CEOD_pickles.remove('csv files')
+    # CEOD_pickles.remove('CEOD_set_Valid.p')
 
     take_off_GEnx_OD_grouped = np.empty((0, 5))
     climb_GEnx_GEnx_OD_grouped = np.empty((0, 5))
@@ -29,8 +29,10 @@ def group_CEOD():
     # GEnx_OD_true_grouped = np.array([])
 
     training_limit = int(np.round(len(CEOD_pickles) / 2, 1))
+    print('number of files', len(CEOD_pickles))
+    print('number of trained flights', training_limit)
     for file in CEOD_pickles[:training_limit]:
-        GEnx_OD, GEnx_OD_true, _ = pickle.load(open("CEOD_GEnx/" + file, "rb"))
+        GEnx_OD, GEnx_OD_true, N, alt_time = pickle.load(open("CEOD_GEnx/same_engine_flights/" + file, "rb"))
 
         take_off_GEnx_OD, climb_GEnx_OD, cruise_GEnx_OD = GEnx_OD
 
@@ -103,8 +105,8 @@ def clustering(save=False):
     stacked_cruise = filter_outliers(stacked_cruise)
 
     clusters_take_off_array = create_clusters(stacked_take_off, 10)
-    clusters_climb_array = create_clusters(stacked_climb, 15)
-    clusters_cruise_array = create_clusters(stacked_cruise, 20)
+    clusters_climb_array = create_clusters(stacked_climb, 5)
+    clusters_cruise_array = create_clusters(stacked_cruise, 5)
 
     def viz(norm_array, clusters_array):
         colors = ['#4EACC5', '#FF9C34', '#4E9A06']
@@ -130,8 +132,8 @@ def clustering(save=False):
     print(Genx_input_array.shape)
 
     if save:
-        pickle.dump([Genx_input_array, Genx_true_array], open("Clusters/CEOD_input_clusters2_no_Reynolds.p", "wb"))
+        pickle.dump([Genx_input_array, Genx_true_array], open("Clusters/Clusters_v1.p", "wb"))
 
 
 if __name__ == '__main__':
-    clustering()
+    clustering(save=True)

@@ -102,13 +102,13 @@ def objFOD(X):
                                      1, 1, HPT_fe,
                                      1, 1, LPT_fe])
 
-        CX_c = scaling_F(Re6_DP, Re6[i], X[16], X[17], initial_value=0.9376)
+        CX_c = scaling_F(Re6_DP, Re6[i], 0, 0, initial_value=0.9376)
 
-        CV_c = scaling_F(Re6_DP, Re6[i], X[18], X[19], initial_value=1)
+        CV_c = scaling_F(Re6_DP, Re6[i], X[16], X[17], initial_value=1)
 
-        CX_d = scaling_F(Re14_DP, Re14[i], X[20], X[21], initial_value=0.93)
+        CX_d = scaling_F(Re14_DP, Re14[i], 0, 0, initial_value=0.93)
 
-        CV_d = scaling_F(Re14_DP, Re14[i], X[22], X[23], initial_value=1)
+        CV_d = scaling_F(Re14_DP, Re14[i], X[18], X[19], initial_value=1)
 
         Nozzle_scaling_array = np.array([CX_c, CV_c,
                                          CX_d, CV_d])

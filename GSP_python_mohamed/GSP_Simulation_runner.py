@@ -68,75 +68,91 @@ HPT_fm, HPT_fpr, HPT_fe = 1, 1, 1
 LPT_fm, LPT_fpr, LPT_fe = 1, 1, 1
 
 
-def get_OD_scaling_array(fm, pr, eta):
-    OD_scaling_array_Fanc = np.array([Fan_c_fm + fm, Fan_c_fpr + pr, Fan_c_fe + eta,
-                                      Fan_d_fm, Fan_d_fpr, Fan_d_fe,
-                                      HPC_fm, HPC_fpr, HPC_fe,
-                                      HPT_fm, HPT_fpr, HPT_fe,
-                                      LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
+def get_input(scaling_type):
+    def get_OD_scaling_array(fm, pr, eta):
 
-    OD_scaling_array_Fand = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
-                                     Fan_d_fm + fm, Fan_d_fpr + pr, Fan_d_fe + eta,
-                                     HPC_fm, HPC_fpr, HPC_fe,
-                                     HPT_fm, HPT_fpr, HPT_fe,
-                                     LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
+        OD_scaling_array_Fanc = np.array([Fan_c_fm + fm, Fan_c_fpr + pr, Fan_c_fe + eta,
+                                          Fan_d_fm, Fan_d_fpr, Fan_d_fe,
+                                          HPC_fm, HPC_fpr, HPC_fe,
+                                          HPT_fm, HPT_fpr, HPT_fe,
+                                          LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
 
-    OD_scaling_array_HPC = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
-                                     Fan_d_fm, Fan_d_fpr, Fan_d_fe,
-                                     HPC_fm + fm, HPC_fpr + pr, HPC_fe + eta,
-                                     HPT_fm, HPT_fpr, HPT_fe,
-                                     LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
+        OD_scaling_array_Fand = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
+                                          Fan_d_fm + fm, Fan_d_fpr + pr, Fan_d_fe + eta,
+                                          HPC_fm, HPC_fpr, HPC_fe,
+                                          HPT_fm, HPT_fpr, HPT_fe,
+                                          LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
 
-    OD_scaling_array_HPT = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
-                                     Fan_d_fm, Fan_d_fpr, Fan_d_fe,
-                                     HPC_fm, HPC_fpr, HPC_fe,
-                                     HPT_fm + fm, HPT_fpr + pr, HPT_fe + eta,
-                                     LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
+        OD_scaling_array_HPC = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
+                                         Fan_d_fm, Fan_d_fpr, Fan_d_fe,
+                                         HPC_fm + fm, HPC_fpr + pr, HPC_fe + eta,
+                                         HPT_fm, HPT_fpr, HPT_fe,
+                                         LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
 
-    OD_scaling_array_LPT = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
-                                     Fan_d_fm, Fan_d_fpr, Fan_d_fe,
-                                     HPC_fm, HPC_fpr, HPC_fe,
-                                     HPT_fm, HPT_fpr, HPT_fe,
-                                     LPT_fm + fm, LPT_fpr + pr, LPT_fe + eta]).reshape((1, 15))
+        OD_scaling_array_HPT = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
+                                         Fan_d_fm, Fan_d_fpr, Fan_d_fe,
+                                         HPC_fm, HPC_fpr, HPC_fe,
+                                         HPT_fm + fm, HPT_fpr + pr, HPT_fe + eta,
+                                         LPT_fm, LPT_fpr, LPT_fe]).reshape((1, 15))
 
-    return OD_scaling_array_LPT
+        OD_scaling_array_LPT = np.array([Fan_c_fm, Fan_c_fpr, Fan_c_fe,
+                                         Fan_d_fm, Fan_d_fpr, Fan_d_fe,
+                                         HPC_fm, HPC_fpr, HPC_fe,
+                                         HPT_fm, HPT_fpr, HPT_fe,
+                                         LPT_fm + fm, LPT_fpr + pr, LPT_fe + eta]).reshape((1, 15))
+        if scaling_type == 'Fanc':
+            return OD_scaling_array_Fanc
 
+        elif scaling_type == 'Fand':
+            return OD_scaling_array_Fand
 
-# create OD arrays
+        elif scaling_type == 'HPC':
+            return OD_scaling_array_HPC
 
-OD_scaling_array_og = get_OD_scaling_array(fm=0, pr=0, eta=0)
+        elif scaling_type == 'HPT':
+            return OD_scaling_array_HPT
 
-OD_scaling_array_fm_up_5 = get_OD_scaling_array(fm=0.05, pr=0, eta=0)
-OD_scaling_array_fm_up_15 = get_OD_scaling_array(fm=0, pr=0, eta=0)
-OD_scaling_array_fm_down_5 = get_OD_scaling_array(fm=-0.05, pr=0, eta=0)
-OD_scaling_array_fm_down_15 = get_OD_scaling_array(fm=-0, pr=0, eta=0)
+        elif scaling_type == 'LPT':
+            return OD_scaling_array_LPT
 
-OD_scaling_array_fpr_up_5 = get_OD_scaling_array(fm=0, pr=0.05, eta=0)
-OD_scaling_array_fpr_up_15 = get_OD_scaling_array(fm=0, pr=0, eta=0)
-OD_scaling_array_fpr_down_5 = get_OD_scaling_array(fm=0, pr=-0.05, eta=0)
-OD_scaling_array_fpr_down_15 = get_OD_scaling_array(fm=0, pr=-0, eta=0)
+    # create OD arrays
 
-OD_scaling_array_fe_up_5 = get_OD_scaling_array(fm=0, pr=0, eta=0.05)
-OD_scaling_array_fe_up_15 = get_OD_scaling_array(fm=0, pr=0, eta=0)
-OD_scaling_array_fe_down_5 = get_OD_scaling_array(fm=0, pr=0, eta=-0.05)
-OD_scaling_array_fe_down_15 = get_OD_scaling_array(fm=0, pr=0, eta=-0)
+    OD_scaling_array_og = get_OD_scaling_array(fm=0, pr=0, eta=0)
 
-# concatenate all OD arrays
-OD_scaling_array = np.concatenate((OD_scaling_array_og,
-                                    OD_scaling_array_fm_up_5, OD_scaling_array_fm_up_15, OD_scaling_array_fm_down_5, OD_scaling_array_fm_down_15,
-                                    OD_scaling_array_fpr_up_5, OD_scaling_array_fpr_up_15, OD_scaling_array_fpr_down_5, OD_scaling_array_fpr_down_15,
-                                    OD_scaling_array_fe_up_5, OD_scaling_array_fe_up_15, OD_scaling_array_fe_down_5, OD_scaling_array_fe_down_15), axis=0)
+    OD_scaling_array_fm_up_5 = get_OD_scaling_array(fm=0.05, pr=0, eta=0)
+    OD_scaling_array_fm_up_15 = get_OD_scaling_array(fm=0, pr=0, eta=0)
+    OD_scaling_array_fm_down_5 = get_OD_scaling_array(fm=-0.05, pr=0, eta=0)
+    OD_scaling_array_fm_down_15 = get_OD_scaling_array(fm=-0, pr=0, eta=0)
 
+    OD_scaling_array_fpr_up_5 = get_OD_scaling_array(fm=0, pr=0.05, eta=0)
+    OD_scaling_array_fpr_up_15 = get_OD_scaling_array(fm=0, pr=0, eta=0)
+    OD_scaling_array_fpr_down_5 = get_OD_scaling_array(fm=0, pr=-0.05, eta=0)
+    OD_scaling_array_fpr_down_15 = get_OD_scaling_array(fm=0, pr=-0, eta=0)
 
-print(GEnx_OD)
-# create input array
-input_array = np.concatenate((GEnx_OD, OD_scaling_array), axis=1)
+    OD_scaling_array_fe_up_5 = get_OD_scaling_array(fm=0, pr=0, eta=0.05)
+    OD_scaling_array_fe_up_15 = get_OD_scaling_array(fm=0, pr=0, eta=0)
+    OD_scaling_array_fe_down_5 = get_OD_scaling_array(fm=0, pr=0, eta=-0.05)
+    OD_scaling_array_fe_down_15 = get_OD_scaling_array(fm=0, pr=0, eta=-0)
+
+    # concatenate all OD arrays
+    OD_scaling_array = np.concatenate((OD_scaling_array_og,
+                                       OD_scaling_array_fm_up_5, OD_scaling_array_fm_up_15, OD_scaling_array_fm_down_5,
+                                       OD_scaling_array_fm_down_15,
+                                       OD_scaling_array_fpr_up_5, OD_scaling_array_fpr_up_15,
+                                       OD_scaling_array_fpr_down_5, OD_scaling_array_fpr_down_15,
+                                       OD_scaling_array_fe_up_5, OD_scaling_array_fe_up_15, OD_scaling_array_fe_down_5,
+                                       OD_scaling_array_fe_down_15), axis=0)
+
+    print(GEnx_OD)
+    # create input array
+    input_array = np.concatenate((GEnx_OD, OD_scaling_array), axis=1)
+    return input_array
+
 
 from my_modified_functions import gspdll
 
 
-def run_simulation(input):
-
+def run_simulation(input, save_name):
     y_sim_valid = []
     PRs = []
     ETAs = []
@@ -149,10 +165,10 @@ def run_simulation(input):
     Beta = []
     Mach = []
 
+    gspdll.InitializeModel()
     for i in range(len(input)):
-        gspdll.InitializeModel()
-        y_sim = np.array(runGsp(gspdll, input[i:i+1], output_list))
-        y_sim_valid = y_sim[:, :6]
+        y_sim = np.array(runGsp(gspdll, input[i:i + 1], output_list))
+        y_sim_valid.append(y_sim[:, :6])
         # Reynolds = y_sim[:, 6:16]
         PRs.append(y_sim[:, 16:25])
         ETAs.append(y_sim[:, 25:30])
@@ -169,13 +185,14 @@ def run_simulation(input):
     print(Mach)
 
     pickle.dump([y_sim_valid, PRs, ETAs, Ws, TR, FN, Tt, Pt, Nc, Beta, Mach],
-                open("Results/OD_scaling_sensitivity.p",
+                open(f"Results/{save_name}.p",
                      "wb"))
-    return
 
-
-
-run = run_simulation(input_array)
+run_simulation(get_input(scaling_type='Fanc'), save_name="OD_scaling_Fanc")
+run_simulation(get_input(scaling_type='Fand'), save_name="OD_scaling_Fand")
+run_simulation(get_input(scaling_type='HPC'), save_name="OD_scaling_HPC")
+run_simulation(get_input(scaling_type='HPT'), save_name="OD_scaling_HPT")
+run_simulation(get_input(scaling_type='LPT'), save_name="OD_scaling_LPT")
 
 # for i in range(len(run1[0])):  # 0: takeoff 1:climb 2:cruise
 #     plt.xlabel('Corrected Fan Speed [%]')

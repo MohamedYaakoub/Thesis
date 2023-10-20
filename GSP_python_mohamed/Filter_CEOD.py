@@ -47,6 +47,7 @@ for file in os.listdir(directory)[1:]:
 
 
     data_original = pd.read_pickle(directory + "/" + file)
+    print(data_original["header__engine_serial_number"])
     data_original = data_original[keys]
     data_original.rename(columns=convert_CEOD_ZOE, inplace=True)
 

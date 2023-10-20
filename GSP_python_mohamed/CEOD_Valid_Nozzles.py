@@ -4,6 +4,7 @@ from GSP_helper import cleanup, runGsp
 from matplotlib import pyplot as plt
 from map_functions import reset_maps
 import pyxdsm.XDSM
+import os
 
 # reset_maps()
 
@@ -15,10 +16,6 @@ GSPfileName = "OffDesignGEnx_Valid_All parameters.mxl"  # this is only used for 
 # GEnx_OD, GEnx_OD_true, N1cCEOD = pickle.load(open("CEOD_GEnx/" + file_name, "rb"))
 # _, All_Reynolds = pickle.load(open("Constants/Reynolds_" + file_name.strip("CEOD_"), "rb"))
 
-file_name = "CEOD_data_mohamed_2019_feb_1-9_2.p"
-GEnx_OD, GEnx_OD_true, N, alt_time, All_Reynolds = pickle.load(open("Reynolds_pickle/Reynolds_" + file_name, "rb"))
-Re2_DP, Re25_DP, Re3_DP, Re4_DP, Re49_DP, Re5_DP, Re14_DP, Re19_DP, Re6_DP, Re9_DP = All_Reynolds[0][0, :].T
-print(Re6_DP)
 from my_modified_functions import gspdll
 
 OG_input_list = ["N1", "P0", "T0", "Mach", "HP"]
@@ -58,12 +55,10 @@ else:
     SF_design_point_TO = [1] * 8
 
 if OD_scaling:
-    X = [-2.30796342e-02, 1.15109471e-01, -9.99782047e-02, 1.99960925e-01,
-         -9.13379971e-03, 7.37882875e-02, -9.99305251e-02, 9.99816014e-02,
-         4.22105053e-02, -1.99803420e-01, 1.85207000e-02, -8.60718149e-02,
-         -4.82782377e-02, 1.82907763e-02, -9.99378071e-02, -9.18236756e-02,
-         -2.71460256e-03, -1.90161266e-03, 2.39860677e-05, -4.37042293e-05,
-         8.34522730e-03, -3.18924184e-04, 1.37287080e-05, -5.69453862e-06]
+    X = [-0.09737036, 0.09429092, -0.09994714, 0.19372794, -0.02110662, 0.09311127,
+         -0.08758217, 0.04846549, 0.05750697, -0.18643443, 0.01754303, -0.08327033,
+         -0.04006111, 0.02969302, -0.02456914, -0.06138784, -0.09979278, 0.07921487,
+         -0.04021015, 0.0657303]
     X_takeoff = X
     X_climb = X
     X_cruise = X
@@ -140,19 +135,19 @@ def simulate(Re, inputDat, X):
                                      1, 1, HPT_fe,
                                      1, 1, LPT_fe])
 
-        CX_c = scaling_F(Re6_DP, Re6_i[i], X[16], X[17], initial_value=0.9376)
+        CX_c = scaling_F(Re6_DP, Re6_i[i], 0, 0, initial_value=0.9376)
 
-        CV_c = scaling_F(Re6_DP, Re6_i[i], X[18], X[19], initial_value=1)
+        CV_c = scaling_F(Re6_DP, Re6_i[i], X[16], X[17], initial_value=1)
 
-        CX_d = scaling_F(Re14_DP, Re14_i[i], X[20], X[21], initial_value=0.93)
+        CX_d = scaling_F(Re14_DP, Re14_i[i], 0, 0, initial_value=0.93)
 
-        CV_d = scaling_F(Re14_DP, Re14_i[i], X[22], X[23], initial_value=1)
+        CV_d = scaling_F(Re14_DP, Re14_i[i], X[18], X[19], initial_value=1)
 
         Nozzle_scaling_array = np.array([CX_c, CV_c,
                                          CX_d, CV_d])
 
         # print(OD_scaling_array)
-        print("Nozzle_scaling_array", Nozzle_scaling_array)
+        # print("Nozzle_scaling_array", Nozzle_scaling_array)
         run_gsp_input = np.concatenate((inputDat[i, :], OD_scaling_array, Nozzle_scaling_array), axis=0)
         y_sim_iter = runGsp(gspdll, run_gsp_input, output_list)
         y_sim.append(y_sim_iter)
@@ -179,7 +174,7 @@ def compute_error(inputDat, trueVal, Re, X_array):
     return meanE, change * 100, y_sim_valid, Reynolds, PRs, ETAs, Ws, TR, FN, Tt, Pt, Nc
 
 
-def run_validation():
+def run_validation(GEnx_OD, GEnx_OD_true, All_Reynolds):
     paramE = output_list[:6]
     counter = 0
 
@@ -218,7 +213,7 @@ def run_validation():
         counter += 1
         print("counter value: ", counter)
         print('Loop initiated')
-        print(X)
+        print(i.shape)
 
         inputDat = i
         trueVal = j
@@ -228,11 +223,6 @@ def run_validation():
                                                                                                      Re,
                                                                                                      X)
 
-        print('RE', Reynolds)
-        print('PRs', PRs)
-        print('eta', ETAs)
-        print('ws', Ws)
-        print('Tr', TR)
         print('FN', FN)
         meanL.append(list(mean))
         stdL.append(list(np.std(change, axis=0)))
@@ -250,27 +240,27 @@ def run_validation():
         All_Nc.append(Nc)
 
         # %%
-        cmap = plt.get_cmap('tab20')
-        clist = cmap(np.linspace(0, 1, len(paramE)))
-        plt.figure()
-        for i in range(len(paramE)):
-            plt.scatter(inputDat[:, 0], change[:, i], label=paramE[i])
-        plt.xlabel('Corrected Fan Speed [%]')
-        plt.ylabel('Error (CEOD - GSP) [%]')
-        plt.legend(loc='lower center')
-        # plt.ylim(-10, 6)
-        plt.show()
+        # cmap = plt.get_cmap('tab20')
+        # clist = cmap(np.linspace(0, 1, len(paramE)))
+        # plt.figure()
+        # for i in range(len(paramE)):
+        #     plt.scatter(inputDat[:, 0], change[:, i], label=paramE[i])
+        # plt.xlabel('Corrected Fan Speed [%]')
+        # plt.ylabel('Error (CEOD - GSP) [%]')
+        # plt.legend(loc='lower center')
+        # # plt.ylim(-10, 6)
+        # plt.show()
 
     # barC(EtaL, ['Take-off', 'Climb', 'Cruise'], Etas, "Efficiency [%]")
     All_change = [item for sublist in All_change for item in sublist]
     Rms = np.sqrt(np.mean(np.mean(np.array(All_change) ** 2, axis=0)))
-    if OD_scaling:
-        barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]",
-             f'{file_name.strip("CEOD_").strip(".p")} \n with Re Correction \n RMSE: {str(round(Rms, 6))}')
-    else:
-        barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]",
-             f'{file_name.strip("CEOD_").strip(".p")} \n No Re Correction \n RMSE: {str(round(Rms, 6))}')
-    print(Rms, "rms")
+    # if OD_scaling:
+    #     barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]",
+    #          f'{file_name.strip("CEOD_").strip(".p")} \n with Re Correction \n RMSE: {str(round(Rms, 6))}')
+    # else:
+    #     barC(meanL, ['Take-off', 'Climb', 'Cruise'], paramE, "Error [%]",
+    #          f'{file_name.strip("CEOD_").strip(".p")} \n No Re Correction \n RMSE: {str(round(Rms, 6))}')
+    # print(Rms, "rms")
     print("Part 1 done")
 
     if DP_calibration:
@@ -281,7 +271,8 @@ def run_validation():
         else:
             if OD_scaling:
                 pickle.dump([All_validation_params, ALL_PRs, All_ETAs, All_Ws, All_TR, All_Fn, All_Tt, All_Pt, All_Nc],
-                            open("Results/Results_one_equation_DP_calibration_Nozzles_" + file_name.strip("CEOD_"),
+                            open("Results_validation/Results_one_equation_DP_calibration_Nozzles_no_CV_iter2" + file_name.strip(
+                                "Reynolds_CEOD_"),
                                  "wb"))
             else:
                 # pickle.dump([All_validation_params, ALL_PRs, All_ETAs, All_Ws, All_TR, All_Fn, All_Tt, All_Pt],
@@ -339,7 +330,16 @@ def barC(outputval, selected_k, params_out, y_name, title):
 
 
 if __name__ == '__main__':
-    run_validation()
+
+    directory = "Reynolds_pickle/"
+    print(os.listdir(directory)[:-1])
+    for file_name in os.listdir(directory)[:-1]:
+        print(file_name)
+        GEnx_OD, GEnx_OD_true, _, _, \
+            All_Reynolds, _, _, _, _, _, _, _, _, \
+            _ = pickle.load(open("Reynolds_pickle/" + file_name, "rb"))
+        Re2_DP, Re25_DP, Re3_DP, Re4_DP, Re49_DP, Re5_DP, Re14_DP, Re19_DP, Re6_DP, Re9_DP = All_Reynolds[0][0, :].T
+        run_validation(GEnx_OD, GEnx_OD_true, All_Reynolds)
     # cleanup(gspdll)
 
 # %%
