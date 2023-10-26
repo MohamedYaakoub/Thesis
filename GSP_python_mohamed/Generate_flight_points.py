@@ -3,30 +3,30 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def filter_outliers(data_array):
-    for i in range(data_array.shape[1]):
-        data = data_array[:, i]
-        running = True
-        print(f'data size at the beginning {data_array.shape}')
-
-        if len(data) == 0:
-            print("data is empty")
-            pass
-            # filtered_data.append([])
-        else:
-            while running:
-                q1 = np.percentile(data, 25)
-                q3 = np.percentile(data, 75)
-                iqr = q3 - q1
-                lower_bound = q1 - 1.5 * iqr
-                upper_bound = q3 + 1.5 * iqr
-                condition = (data >= lower_bound) & (data <= upper_bound)
-                if False in condition:
-                    data = data[condition]
-                    data_array = data_array[condition]
-                else:
-                    running = False
-    return data_array
+# def filter_outliers(data_array):
+#     for i in range(data_array.shape[1]):
+#         data = data_array[:, i]
+#         running = True
+#         print(f'data size at the beginning {data_array.shape}')
+#
+#         if len(data) == 0:
+#             print("data is empty")
+#             pass
+#             # filtered_data.append([])
+#         else:
+#             while running:
+#                 q1 = np.percentile(data, 25)
+#                 q3 = np.percentile(data, 75)
+#                 iqr = q3 - q1
+#                 lower_bound = q1 - 1.5 * iqr
+#                 upper_bound = q3 + 1.5 * iqr
+#                 condition = (data >= lower_bound) & (data <= upper_bound)
+#                 if False in condition:
+#                     data = data[condition]
+#                     data_array = data_array[condition]
+#                 else:
+#                     running = False
+#     return data_array
 
 
 def reduce_points(save=False):
@@ -34,6 +34,7 @@ def reduce_points(save=False):
     GEnx_OD, GEnx_OD_true, N1c, alt_time, All_Reynolds = pickle.load(open("Reynolds_pickle/"
                                                                           + file,
                                                                           "rb"))
+
     take_off_GEnx_OD, climb_GEnx_OD, cruise_GEnx_OD = GEnx_OD
     take_off_GEnx_OD_true, climb_GEnx_OD_true, cruise_GEnx_OD_true = GEnx_OD_true
     take_off_alt_time, climb_alt_time, cruise_alt_time = alt_time
@@ -71,7 +72,7 @@ def reduce_points(save=False):
         max_val = max(arr)
 
         # Calculate the spacing between min and max for 5 points
-        spacing = (max_val - min_val) / 4
+        spacing = (max_val - min_val) / (no_of_samples - 1)
 
         # Initialize a list to store the sampled points
         sample_indices = []
@@ -96,13 +97,14 @@ def reduce_points(save=False):
                  markeredgecolor='k', markersize=6)
         plt.show()
 
-    sampled_take_off = stacked_take_off[get_sampling_indices(stacked_take_off[:, 0], 5)]
-    sampled_climb = stacked_climb[get_sampling_indices(stacked_climb[:, 11], 5)]
-    sampled_cruise = stacked_cruise[get_sampling_indices(stacked_cruise[:, 0], 5)]
+    no_of_samples = 5
+    sampled_take_off = stacked_take_off[get_sampling_indices(stacked_take_off[:, 0], no_of_samples)]
+    sampled_climb = stacked_climb[get_sampling_indices(stacked_climb[:, 11], no_of_samples)]
+    sampled_cruise = stacked_cruise[get_sampling_indices(stacked_cruise[:, 12], no_of_samples)]
 
     viz(stacked_take_off, sampled_take_off, "take off")
-    viz(stacked_climb, sampled_climb, "climb")
-    viz(stacked_cruise, sampled_cruise, "cruise")
+    # viz(stacked_climb, sampled_climb, "climb")
+    # viz(stacked_cruise, sampled_cruise, "cruise")
 
     Genx_input_array = np.concatenate((sampled_take_off[:, :5],
                                        sampled_climb[:, :5],
